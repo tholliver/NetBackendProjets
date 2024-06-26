@@ -1,0 +1,50 @@
+### BIKES METHODS
+
+GET http://localhost:5110/bikes
+
+### Get specific Bike
+GET http://localhost:5110/bikes/322
+
+### Post new Bike
+POST http://localhost:5110/bikes
+Content-Type: application/json
+
+ {
+    "name": "New bike 2024",
+    "modelYear": 2024,
+    "price": 3199.99,
+    "brandId": 9,
+    "categoryId": 7
+  }
+
+### PUT -> update Bike
+PUT http://localhost:5110/bikes/1
+Content-Type: application/json
+
+ {
+    "name": "Trek Checkpoint ALR Frameset - 2019",
+    "modelYear": 2019,
+    "price": 3199.99,
+    "brandId": 9,
+    "categoryId": 7,
+    "category": null,
+    "brand": null
+  }
+
+### DELETE delete Bike
+DELETE http://localhost:5110/bikes/10
+
+### BIKES METHODS
+GET http://localhost:5110/brands
+
+### Get specific Bike
+GET http://localhost:5110/brands/11
+
+PUT http://localhost:5110/brands/11
+
+{
+  "Name": "New name from"
+}
+
+### 
+DELETE http://localhost:5110/brands/12

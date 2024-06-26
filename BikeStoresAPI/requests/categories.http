@@ -1,0 +1,9 @@
+@CategotiesEndpoint = http://localhost:5272/categories
+
+### Get 
+GET {{CategotiesEndpoint}}/
+Accept: application/json
+
+###
+GET {{CategotiesEndpoint}}/1
+Accept: application/json
