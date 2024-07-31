@@ -1,0 +1,19 @@
+@BankingAPI_HostAddress = http://localhost:5292
+
+### Customers
+GET {{BankingAPI_HostAddress}}/customers
+Accept: application/json
+
+###
+### Create a new customer
+POST {{BankingAPI_HostAddress}}/customers
+Accept: application/json
+Content-Type: application/json
+
+{
+    "FirstName": "Juan",
+    "LastName": "Dunot",
+    "Email": "john.doe@example.com",
+    "Phone": "123-456-7890",
+    "Password": "securepassword"
+}

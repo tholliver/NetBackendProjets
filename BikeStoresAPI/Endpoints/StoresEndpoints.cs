@@ -11,7 +11,8 @@ namespace BikeStoresAPI.Endpoints
 
             group.MapGet("/{id}", async (int id, BikeStoreContext _dbContext) =>
             {
-                var storeFound = await _dbContext.Stores.Include(s => s.Stock).ThenInclude(b => b.Bike).FirstAsync(e => e.Id == id);
+                var storeFound = await _dbContext.Stores.Include(s => s.Stock)
+                .ThenInclude(b => b.Bike).FirstAsync(e => e.Id == id);
                 return storeFound is null ? Results.NotFound() : Results.Ok(storeFound);
             });
 

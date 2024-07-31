@@ -28,12 +28,11 @@ namespace BikeStoresAPI.Endpoints
             {
                 var bikeDto = await context.Bikes
                 .Include(b => b.Brand)
-                .Where(b => b.Id == id).ToListAsync();
+                .Where(b => b.Id == id).FirstAsync();
 
+                Console.WriteLine("Here the obj: ", bikeDto);
 
-                Console.WriteLine("Here the obj: ", bikeDto.Take(2));
-
-                return bikeDto is null ? Results.NotFound() : Results.Ok(bikeDto.Take(2));
+                return bikeDto is null ? Results.NotFound() : Results.Ok(bikeDto);
             })
             .WithName(GetBikesEndpoint);
 
