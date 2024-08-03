@@ -66,6 +66,47 @@ namespace BankingAPI.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("Accounts");
+
+                    b.HasData(
+                        new
+                        {
+                            AccountId = 1,
+                            AccountNumber = "123456789",
+                            AllowedTransactions = 100,
+                            Currency = "USD",
+                            CustomerId = 1,
+                            Description = "John's checking account",
+                            EarlyWithdrawalPenalty = false,
+                            InterestRate = 0.01m,
+                            MinimumBalance = 1000.00m,
+                            Type = "Checking"
+                        },
+                        new
+                        {
+                            AccountId = 2,
+                            AccountNumber = "987654321",
+                            AllowedTransactions = 10,
+                            Currency = "USD",
+                            CustomerId = 1,
+                            Description = "John's savings account",
+                            EarlyWithdrawalPenalty = true,
+                            InterestRate = 0.05m,
+                            MinimumBalance = 500.00m,
+                            Type = "Savings"
+                        },
+                        new
+                        {
+                            AccountId = 3,
+                            AccountNumber = "111222333",
+                            AllowedTransactions = 50,
+                            Currency = "USD",
+                            CustomerId = 2,
+                            Description = "Jane's checking account",
+                            EarlyWithdrawalPenalty = false,
+                            InterestRate = 0.02m,
+                            MinimumBalance = 2000.00m,
+                            Type = "Checking"
+                        });
                 });
 
             modelBuilder.Entity("BankingAPI.Entities.Customer", b =>
@@ -99,6 +140,26 @@ namespace BankingAPI.Migrations
                     b.HasKey("CustomerId");
 
                     b.ToTable("Customers");
+
+                    b.HasData(
+                        new
+                        {
+                            CustomerId = 1,
+                            Email = "john.doe@example.com",
+                            FirstName = "John",
+                            LastName = "Doe",
+                            Password = "password123",
+                            Phone = "123-456-7890"
+                        },
+                        new
+                        {
+                            CustomerId = 2,
+                            Email = "jane.smith@example.com",
+                            FirstName = "Jane",
+                            LastName = "Smith",
+                            Password = "password456",
+                            Phone = "098-765-4321"
+                        });
                 });
 
             modelBuilder.Entity("BankingAPI.Entities.Transaction", b =>

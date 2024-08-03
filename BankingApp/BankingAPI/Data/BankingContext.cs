@@ -21,5 +21,23 @@ public class BankingContext(DbContextOptions<BankingContext> options)
                                 .WithOne(e => e.Account)
                                 .HasForeignKey(e => e.AccountId)
                                 .IsRequired();
+
+        // Seeding initial Data
+        var customers = SeedData.GetCustomers();
+        var accounts = SeedData.GetAccounts();
+
+        // Removing navigation properties to avoid circular reference issues
+        foreach (var customer in customers)
+        {
+            customer.Accounts = null;
+        }
+
+        foreach (var account in accounts)
+        {
+            account.Customer = null;
+        }
+
+        modelBuilder.Entity<Customer>().HasData(customers);
+        modelBuilder.Entity<Account>().HasData(accounts);
     }
 }
