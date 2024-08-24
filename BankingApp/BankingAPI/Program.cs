@@ -1,12 +1,15 @@
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 using BankingAPI.Data;
 using BankingAPI.Endpoints;
+using BankingAPI.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var AllowSpecificOrigins = "_AllowSpecificOrigins";
 
-string[] allowedOriging = { "http://localhost:3000" };
+string[] allowedOriging = ["http://localhost:3000"];
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -33,8 +36,20 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Authentication
+builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
+builder.Services.AddAuthorizationBuilder();
+builder.Services.AddIdentityCore<Customer>()
+            .AddEntityFrameworkStores<BankingContext>()
+            .AddApiEndpoints();
+
+
 var app = builder.Build();
 
+// Routes for Auth
+// Since customized Customer Entity, cant use {app.MapIdentityApi<Customer>();} 
+
+//.RequireAuthorization();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -44,47 +59,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// var summaries = new[]
-// {
-//     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-// };
 app.UseCors(AllowSpecificOrigins);
-app.MapCustomerEndpoint().WithTags("Customers").WithOpenApi();
+// app.MapCustomerEndpoint().WithTags("Customers").WithOpenApi();
 app.MapAccountEndpoint().WithTags("Accounts").WithOpenApi();
 app.MapTransactionEndpoint().WithTags("Transactions").WithOpenApi();
-// app.UseEndpoints(endpoints =>
-// {
-//     endpoints.MapGet("/echo",
-//         context => context.Response.WriteAsync("echo"))
-//         .RequireCors(MyAllowSpecificOrigins);
 
-//     endpoints.MapControllers()
-//              .RequireCors(MyAllowSpecificOrigins);
-
-//     endpoints.MapGet("/echo2",
-//         context => context.Response.WriteAsync("echo2"));
-
-//     endpoints.MapRazorPages();
-// });
-
-// app.MapGet("/weatherforecast", () =>
-// {
-//     var forecast = Enumerable.Range(1, 5).Select(index =>
-//         new WeatherForecast
-//         (
-//             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-//             Random.Shared.Next(-20, 55),
-//             summaries[Random.Shared.Next(summaries.Length)]
-//         ))
-//         .ToArray();
-//     return forecast;
-// })
-// .WithName("GetWeatherForecast")
-// .WithOpenApi();
+app.MapIdentityCustomerApi().WithTags("Customers").WithOpenApi();
 
 app.Run();
-
-// record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-// {
-//     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-// }

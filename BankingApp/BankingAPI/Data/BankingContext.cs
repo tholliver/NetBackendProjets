@@ -1,17 +1,22 @@
 using BankingAPI.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankingAPI.Data;
-public class BankingContext(DbContextOptions<BankingContext> options)
-: DbContext(options)
+public class BankingContext : IdentityDbContext<Customer>
 {
+    public BankingContext(DbContextOptions<BankingContext> options)
+    : base(options)
+    {
+
+    }
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Account> Accounts => Set<Account>();
     public DbSet<Transaction> Transactions => Set<Transaction>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Customer>().HasMany(e => e.Accounts)
                                 .WithOne(e => e.Customer)
                                 .HasForeignKey(e => e.CustomerId)
@@ -23,21 +28,21 @@ public class BankingContext(DbContextOptions<BankingContext> options)
                                 .IsRequired();
 
         // Seeding initial Data
-        var customers = SeedData.GetCustomers();
-        var accounts = SeedData.GetAccounts();
+        // var customers = SeedData.GetCustomers();
+        // var accounts = SeedData.GetAccounts();
 
-        // Removing navigation properties to avoid circular reference issues
-        foreach (var customer in customers)
-        {
-            customer.Accounts = null;
-        }
+        // // Removing navigation properties to avoid circular reference issues
+        // foreach (var customer in customers)
+        // {
+        //     customer.Accounts = null;
+        // }
 
-        foreach (var account in accounts)
-        {
-            account.Customer = null;
-        }
+        // foreach (var account in accounts)
+        // {
+        //     account.Customer = null;
+        // }
 
-        modelBuilder.Entity<Customer>().HasData(customers);
-        modelBuilder.Entity<Account>().HasData(accounts);
+        // modelBuilder.Entity<Customer>().HasData(customers);
+        // modelBuilder.Entity<Account>().HasData(accounts);
     }
 }

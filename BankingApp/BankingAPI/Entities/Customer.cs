@@ -1,13 +1,14 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace BankingAPI.Entities;
 
-public class Customer
+public class Customer : IdentityUser
 {
-    public int CustomerId { get; set; }
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
-    public required string Email { get; set; }
-    public required string Phone { get; set; }
-    public required string Password { get; set; }
-    public required ICollection<Account> Accounts { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+
+    public ICollection<Account> Accounts { get; set; }
+
+    // public Customer() { }
 }
 

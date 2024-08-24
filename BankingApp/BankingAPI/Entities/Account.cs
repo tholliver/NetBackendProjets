@@ -11,7 +11,7 @@ public class Account
     public decimal MinimumBalance { get; set; }
     public int AllowedTransactions { get; set; }
     public bool EarlyWithdrawalPenalty { get; set; }
-    public int CustomerId { get; set; }
+    public string CustomerId { get; set; }
     public Customer Customer { get; set; }
     public ICollection<Transaction> Transactions { get; set; }
 }

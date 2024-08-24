@@ -27,10 +27,10 @@ static class AccountsEndpoint
         //              .AsNoTracking()
         //              .ToListAsync());
 
-        AccountRoutes.MapPost("/{id}", async (int id, CreateAccountDto newAccount, BankingContext _context) =>
+        AccountRoutes.MapPost("/{id}", async (string id, CreateAccountDto newAccount, BankingContext _context) =>
         {
             var transaction = await _context.Database.BeginTransactionAsync();
-            var customerFound = await _context.Customers.FirstOrDefaultAsync(a => a.CustomerId == id);
+            var customerFound = await _context.Customers.FirstOrDefaultAsync(a => a.Id == id);
 
             Account account = newAccount.ToEntity();
             // Here handle if Customer does not exists

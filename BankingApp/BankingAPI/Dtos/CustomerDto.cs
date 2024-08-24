@@ -5,9 +5,9 @@ public interface ICustomerDto
 {
     string FirstName { get; init; }
     string LastName { get; init; }
-    string Email { get; init; }
-    string Phone { get; init; }
-    string Password { get; init; }
+    string PhoneNumber { get; init; }
+    ICollection<Account> Accounts { get; init; }
+
 }
 
 public record class CreateCustomerDto
@@ -15,8 +15,9 @@ public record class CreateCustomerDto
 {
     public required string FirstName { get; init; }
     public required string LastName { get; init; }
+    public required string PhoneNumber { get; init; }
     public required string Email { get; init; }
-    public required string Phone { get; init; }
+    public required string Username { get; init; }
     public required string Password { get; init; }
     public required ICollection<Account> Accounts { get; init; }
 }
@@ -26,7 +27,15 @@ public record class UpdateCustomerDto
 {
     public required string FirstName { get; init; }
     public required string LastName { get; init; }
+    public required string PhoneNumber { get; init; }
+    public required ICollection<Account> Accounts { get; init; }
+}
+
+public record class CustomerInfoResponse : ICustomerDto
+{
+    public required string FirstName { get; init; }
+    public required string LastName { get; init; }
+    public required string PhoneNumber { get; init; }
     public required string Email { get; init; }
-    public required string Phone { get; init; }
-    public required string Password { get; init; }
+    public ICollection<Account> Accounts { get; init; }
 }

@@ -10,6 +10,7 @@ public interface IAccountDto
     public decimal MinimumBalance { get; init; }
     public int AllowedTransactions { get; init; }
     public bool EarlyWithdrawalPenalty { get; init; }
+
     // public int CustomerId { get; init; }
 }
 
@@ -24,6 +25,7 @@ public record class CreateAccountDto : IAccountDto
     public decimal MinimumBalance { get; init; }
     public int AllowedTransactions { get; init; }
     public bool EarlyWithdrawalPenalty { get; init; }
+
     // public int CustomerId { get; init; }
 }
 
@@ -37,5 +39,6 @@ public record class UpdateAccountDto : IAccountDto
     public decimal MinimumBalance { get; init; }
     public int AllowedTransactions { get; init; }
     public bool EarlyWithdrawalPenalty { get; init; }
+
     // public int CustomerId { get; init; }
 }

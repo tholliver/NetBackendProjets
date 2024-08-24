@@ -1,8 +1,6 @@
 using BankingAPI.Data;
 using BankingAPI.Dtos;
 using BankingAPI.Mapping;
-using IdentityModel.OidcClient;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankingAPI.Endpoints;

@@ -23,3 +23,11 @@ export const customerSchema = z.object({
 });
 
 export type SignUpSchemaType = z.infer<typeof customerSchema>
+
+
+export const loginSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(8),
+})
+
+export type User = z.infer<typeof loginSchema>
