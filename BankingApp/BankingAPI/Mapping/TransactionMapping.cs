@@ -8,7 +8,7 @@ public static class TransactionMapping
     {
         return new Transaction()
         {
-            TransactionId = newTransaction.TransactionId,
+            // TransactionId = newTransaction.TransactionId,
             SourceAccountNumber = newTransaction.SourceAccountNumber,
             TargetAccountNumber = newTransaction.TargetAccountNumber,
             Status = newTransaction.Status,

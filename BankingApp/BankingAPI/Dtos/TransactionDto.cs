@@ -4,7 +4,7 @@ namespace BankingAPI.Dtos;
 
 public interface ITransactionDto
 {
-    public int TransactionId { get; init; }
+    // public int TransactionId { get; init; }
     public string SourceAccountNumber { get; init; }  // New property for the source account
     public string TargetAccountNumber { get; init; }
     public StatusEnum Status { get; init; }
@@ -18,9 +18,8 @@ public interface ITransactionDto
 
 public record class CreateTransactionDto : ITransactionDto
 {
-    public int TransactionId { get; init; }
-    public string SourceAccountNumber { get; init; }  // New property for the source account
-    public string TargetAccountNumber { get; init; }
+    public required string SourceAccountNumber { get; init; }  // New property for the source account
+    public required string TargetAccountNumber { get; init; }
     public StatusEnum Status { get; init; }
     public decimal Amount { get; init; }
     public DateTime CreatedDate { get; init; }  // New property for when the transaction was created

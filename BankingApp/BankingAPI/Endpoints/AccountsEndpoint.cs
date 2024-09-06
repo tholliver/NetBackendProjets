@@ -14,7 +14,7 @@ static class AccountsEndpoint
         const string GetAccountEndpoint = "GetAccount";
 
         RouteGroupBuilder AccountRoutes = app.MapGroup("accounts");
-
+        // Has to be all accounts for one CUSTOMER
         AccountRoutes.MapGet("/", async (int id, BankingContext _context) =>
         {
             var foundAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.AccountId == id);
@@ -26,6 +26,27 @@ static class AccountsEndpoint
         //              .Select(game => game.ToGameSummaryDto())
         //              .AsNoTracking()
         //              .ToListAsync());
+        AccountRoutes.MapGet("/{id}", async (string id, BankingContext _context) =>
+        {
+            // var customerFound = await _context.Customers.FindAsync(a => a.Id == id);
+            // Handle if has 0 accounts 
+            var foundAccounts = await _context.Accounts.Where(c => c.CustomerId == id)
+                                            .Include(t => t.Transactions).ToListAsync();
+
+            return foundAccounts is null ? Results.NotFound() : Results.Ok(foundAccounts);
+        });
+
+        // Specific account
+        AccountRoutes.MapGet("/{customerId}/{accountId}", async (string customerId, int accountId, BankingContext _context) =>
+       {
+           // var customerFound = await _context.Customers.FindAsync(a => a.Id == id);
+           // Handle if has 0 accounts 
+           var foundAccounts = await _context.Accounts
+                                    .Where(c => c.CustomerId == customerId && c.AccountId == accountId)
+                                    .Include(t => t.Transactions).ToListAsync();
+
+           return foundAccounts is null ? Results.NotFound() : Results.Ok(foundAccounts);
+       });
 
         AccountRoutes.MapPost("/{id}", async (string id, CreateAccountDto newAccount, BankingContext _context) =>
         {
@@ -46,6 +67,7 @@ static class AccountsEndpoint
             }
             return Results.CreatedAtRoute(GetAccountEndpoint, new { id = account.AccountId }, newAccount);
         });
+
         return AccountRoutes;
     }
 }

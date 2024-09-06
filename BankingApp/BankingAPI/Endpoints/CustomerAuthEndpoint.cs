@@ -101,17 +101,17 @@ public static class IdentityApiCustomerEndpoint
             }
 
             string email = claimsPrincipal.FindFirst(ClaimTypes.Email).Value;
-            Console.WriteLine($"NANANA {email}");
             // var response = await userManager.GetUserAsync(claimsPrincipal);
             var _context = sp.GetService<BankingContext>();
             var customer = _context.Customers.Select(cl => new CustomerInfoResponse
             {
+                CustomerId = cl.Id,
                 FirstName = cl.FirstName,
                 LastName = cl.LastName,
                 Email = cl.Email,
                 PhoneNumber = cl.PhoneNumber
             }).FirstOrDefault(c => c.Email == email);
-            Console.WriteLine($"On the user response: {customer.FirstName}  {customer.Email}");
+            // Console.WriteLine($"On the user response: {customer.FirstName}  {customer.Email}");
 
             return TypedResults.Ok(CreateCustomerInfoResponse(customer));
         });
@@ -220,6 +220,7 @@ public static class IdentityApiCustomerEndpoint
         // var customerResponse = await userManager.FindByEmailAsync(email: user.Email);
         return new CustomerInfoResponse
         {
+            CustomerId = user.CustomerId,
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,

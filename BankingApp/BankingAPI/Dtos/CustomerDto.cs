@@ -33,9 +33,10 @@ public record class UpdateCustomerDto
 
 public record class CustomerInfoResponse : ICustomerDto
 {
+    public required string CustomerId { get; init; }
     public required string FirstName { get; init; }
     public required string LastName { get; init; }
     public required string PhoneNumber { get; init; }
     public required string Email { get; init; }
-    public ICollection<Account> Accounts { get; init; }
+    public ICollection<Account>? Accounts { get; init; }
 }
