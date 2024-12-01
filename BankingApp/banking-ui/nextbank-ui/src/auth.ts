@@ -22,7 +22,6 @@ export const { auth, signIn, signOut } = NextAuth({
                     try {
                         const token = await getToken({ email, password });
                         const customer = await fetchAuthCustomer(token.accessToken);
-                        // console.log('++++++++++++++++++++++++Here on customer: ', customer);
 
                         if (customer) {
                             return {
@@ -40,7 +39,6 @@ export const { auth, signIn, signOut } = NextAuth({
                         throw new Error('Authorization failed');
                     }
                 }
-
                 throw new Error('Invalid credentials');
             },
         }),
@@ -51,7 +49,6 @@ export const { auth, signIn, signOut } = NextAuth({
             return baseUrl;
         },
         jwt: async ({ token, user }) => {
-            // console.log('Here on the batch', token);
             if (user) {
                 token.firstName = user.firstName
                 token.lastName = user.lastName

@@ -14,12 +14,7 @@ export async function authenticate(
     } catch (error) {
         console.log('*-*-*-***********************', error, 'Hre', typeof (error));
         if (error instanceof AuthError) {
-            // switch (error.type) {
-            //     case 'CredentialsSignin' || 'CallbackRouteError':
-            //         return 'Invalid credentials.';
-            //     default:
-            //         return 'Something went wrong.';
-            // }
+
             if (['CredentialsSignin', 'CallbackRouteError'].includes(error.type)) {
                 return 'Invalid credentials.';
             }

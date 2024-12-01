@@ -1,0 +1,69 @@
+---
+import { ComboboxPopover } from '@/components/reacto/ComboboxPopover'
+import type { Account } from '@/types'
+
+// import Header from '../components/Header.astro';
+// import Footer from '../components/Footer.astro';
+const { pageTitle } = Astro.props
+const accounts: Account[] = [
+  {
+    accountId: 1,
+    accountNumber: '1234567890',
+    type: 'Savings',
+    description: 'Main savings account',
+    currency: 'USD',
+    interestRate: 1.5,
+    minimumBalance: 500.0,
+    allowedTransactions: 10,
+    earlyWithdrawalPenalty: false,
+    customerId: 'cust-001',
+    customer: {},
+    transactions: [],
+  },
+  {
+    accountId: 2,
+    accountNumber: '0987654321',
+    type: 'Checking',
+    description: 'Primary checking account',
+    currency: 'USD',
+    interestRate: 0.5,
+    minimumBalance: 100.0,
+    allowedTransactions: 20,
+    earlyWithdrawalPenalty: false,
+    customerId: 'cust-002',
+    customer: null,
+    transactions: [],
+  },
+  {
+    accountId: 3,
+    accountNumber: '1122334455',
+    type: 'Certificate of Deposit',
+    description: '1-year CD',
+    currency: 'USD',
+    interestRate: 2.5,
+    minimumBalance: 1000.0,
+    allowedTransactions: 0,
+    earlyWithdrawalPenalty: true,
+    customerId: 'cust-003',
+    customer: {},
+    transactions: [],
+  },
+]
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <!-- <Header /> -->
+    <ComboboxPopover client:load accounts={accounts} />
+    <h1 class="text-2xl">Here on he account Lay</h1>
+    <slot />
+    <!-- <Footer /> -->
+  </body>
+</html>

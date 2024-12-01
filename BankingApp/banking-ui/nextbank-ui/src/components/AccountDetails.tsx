@@ -75,7 +75,7 @@ export function AccountDetails(props: AccountDetailsProps) {
       <QuickActions />
       {selectedAccount ? (
         <>
-          <Card>
+          <Card className="my-4">
             <CardHeader>
               <CardTitle>Transaction History</CardTitle>
             </CardHeader>
@@ -113,67 +113,63 @@ export function AccountDetails(props: AccountDetailsProps) {
         </>
       ) : (
         <>
-          <>
-            <h2 className="text-lg font-medium">Accounts</h2>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {data.map((account) => (
-                <Card key={account.accountId}>
-                  <CardHeader>
-                    <CardTitle>{account.type}</CardTitle>
-                    <CardDescription>
-                      Account #: {account.accountNumber}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm text-muted-foreground">
-                        Balance
-                      </div>
-                      <div className="text-lg font-medium">
-                        ${account.minimumBalance}
-                      </div>
+          <h2 className="text-lg font-medium">Accounts</h2>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {data.map((account) => (
+              <Card key={account.accountId}>
+                <CardHeader>
+                  <CardTitle>{account.type}</CardTitle>
+                  <CardDescription>
+                    Account #: {account.accountNumber}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-muted-foreground">Balance</div>
+                    <div className="text-lg font-medium">
+                      ${account.minimumBalance}
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            <div className="py-4">
-              <Card>
-                <h2 className="text-xl font-bold m-4">Recent Transactions</h2>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Description</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>2023-04-15</TableCell>
-                      <TableCell>$50.00</TableCell>
-                      <TableCell>Grocery Store</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2023-04-12</TableCell>
-                      <TableCell>$25.00</TableCell>
-                      <TableCell>Coffee Shop</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2023-04-10</TableCell>
-                      <TableCell>$100.00</TableCell>
-                      <TableCell>Rent Payment</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2023-04-05</TableCell>
-                      <TableCell>$75.00</TableCell>
-                      <TableCell>Utility Bill</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+                  </div>
+                </CardContent>
               </Card>
-            </div>
-          </>
+            ))}
+          </div>
+          <div className="py-4">
+            <Card className="px-6 py-4">
+              <h2 className="text-xl font-bold mx-2">Recent Transactions</h2>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Description</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>2023-04-15</TableCell>
+                    <TableCell>$50.00</TableCell>
+                    <TableCell>Grocery Store</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>2023-04-12</TableCell>
+                    <TableCell>$25.00</TableCell>
+                    <TableCell>Coffee Shop</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>2023-04-10</TableCell>
+                    <TableCell>$100.00</TableCell>
+                    <TableCell>Rent Payment</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>2023-04-05</TableCell>
+                    <TableCell>$75.00</TableCell>
+                    <TableCell>Utility Bill</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Card>
+          </div>
         </>
       )}
     </div>

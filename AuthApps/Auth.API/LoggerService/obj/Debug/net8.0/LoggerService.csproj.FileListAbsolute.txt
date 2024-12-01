@@ -1,0 +1,16 @@
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\bin\Debug\net8.0\LoggerService.deps.json
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\bin\Debug\net8.0\LoggerService.dll
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\bin\Debug\net8.0\LoggerService.pdb
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\bin\Debug\net8.0\Contracts.dll
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\bin\Debug\net8.0\Contracts.pdb
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\obj\Debug\net8.0\LoggerService.csproj.AssemblyReference.cache
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\obj\Debug\net8.0\LoggerService.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\obj\Debug\net8.0\LoggerService.AssemblyInfoInputs.cache
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\obj\Debug\net8.0\LoggerService.AssemblyInfo.cs
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\obj\Debug\net8.0\LoggerService.csproj.CoreCompileInputs.cache
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\obj\Debug\net8.0\LoggerService.sourcelink.json
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\obj\Debug\net8.0\LoggerSe.E7AEA5A8.Up2Date
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\obj\Debug\net8.0\LoggerService.dll
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\obj\Debug\net8.0\refint\LoggerService.dll
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\obj\Debug\net8.0\LoggerService.pdb
+D:\Projects\.net-path\AuthApps\Auth.API\LoggerService\obj\Debug\net8.0\ref\LoggerService.dll

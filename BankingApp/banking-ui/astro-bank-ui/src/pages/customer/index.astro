@@ -1,0 +1,18 @@
+---
+import '@/styles/globals.css'
+import CustomerLayout from '@/layouts/CustomerLayout.astro'
+import { CreditCardIcon } from '@/components/icons/Icons'
+
+import Example from '@/components/reacto/Example'
+const pageTitle = 'Customer main header'
+---
+
+<CustomerLayout pageTitle={pageTitle}>
+  <div>
+    <CreditCardIcon className="" />
+    <div class="bg-red-900">Account: Mario luna</div>
+    <h5 class="text-lg text-gray-950 underline">Some details</h5>
+    <Example client:only="react" />
+    <!-- <ComboboxPopover client:load accounts={accounts} /> -->
+  </div>
+</CustomerLayout>

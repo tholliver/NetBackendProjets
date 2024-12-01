@@ -11,7 +11,11 @@ import {
 import { Label } from '@/components/ui/label'
 
 import { Button } from '@/components/ui/button'
-import { CreditCardIcon, DollarSignIcon, WalletCardsIcon } from './election'
+import {
+  CreditCardIcon,
+  DollarSignIcon,
+  WalletCardsIcon,
+} from '@/components/icons'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { Form } from '../forms/Formix'
 import { AccountType, CustomerType } from '@/models'

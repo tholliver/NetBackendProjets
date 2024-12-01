@@ -1,0 +1,16 @@
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\bin\Debug\net8.0\Service.Contracts.deps.json
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\bin\Debug\net8.0\Service.Contracts.dll
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\bin\Debug\net8.0\Service.Contracts.pdb
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\bin\Debug\net8.0\Shared.dll
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\bin\Debug\net8.0\Shared.pdb
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\obj\Debug\net8.0\Service.Contracts.csproj.AssemblyReference.cache
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\obj\Debug\net8.0\Service.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\obj\Debug\net8.0\Service.Contracts.AssemblyInfoInputs.cache
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\obj\Debug\net8.0\Service.Contracts.AssemblyInfo.cs
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\obj\Debug\net8.0\Service.Contracts.csproj.CoreCompileInputs.cache
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\obj\Debug\net8.0\Service.Contracts.sourcelink.json
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\obj\Debug\net8.0\Service..DEC3DE55.Up2Date
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\obj\Debug\net8.0\Service.Contracts.dll
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\obj\Debug\net8.0\refint\Service.Contracts.dll
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\obj\Debug\net8.0\Service.Contracts.pdb
+D:\Projects\.net-path\AuthApps\Auth.API\Service.Contracts\obj\Debug\net8.0\ref\Service.Contracts.dll

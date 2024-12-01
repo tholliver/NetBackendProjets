@@ -1,0 +1,15 @@
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\obj\Debug\net8.0\ThePretentCompanyApp.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\obj\Debug\net8.0\ThePretentCompanyApp.AssemblyInfoInputs.cache
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\obj\Debug\net8.0\ThePretentCompanyApp.AssemblyInfo.cs
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\obj\Debug\net8.0\ThePretentCompanyApp.csproj.CoreCompileInputs.cache
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\obj\Debug\net8.0\ThePretentCompanyApp.sourcelink.json
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\bin\Debug\net8.0\ThePretentCompanyApp.exe
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\bin\Debug\net8.0\ThePretentCompanyApp.deps.json
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\bin\Debug\net8.0\ThePretentCompanyApp.runtimeconfig.json
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\bin\Debug\net8.0\ThePretentCompanyApp.dll
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\bin\Debug\net8.0\ThePretentCompanyApp.pdb
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\obj\Debug\net8.0\ThePretentCompanyApp.dll
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\obj\Debug\net8.0\refint\ThePretentCompanyApp.dll
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\obj\Debug\net8.0\ThePretentCompanyApp.pdb
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\obj\Debug\net8.0\ThePretentCompanyApp.genruntimeconfig.cache
+D:\Projects\.net-path\Apps\ThePretentCompanyApp\obj\Debug\net8.0\ref\ThePretentCompanyApp.dll

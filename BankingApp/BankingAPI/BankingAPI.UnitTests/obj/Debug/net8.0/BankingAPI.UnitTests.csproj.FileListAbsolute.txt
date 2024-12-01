@@ -1,0 +1,8 @@
+D:\Projects\.net-path\BankingApp\BankingAPI\BankingAPI.UnitTests\bin\Debug\net8.0\CoverletSourceRootsMapping_BankingAPI.UnitTests
+D:\Projects\.net-path\BankingApp\BankingAPI\BankingAPI.UnitTests\obj\Debug\net8.0\BankingAPI.UnitTests.csproj.AssemblyReference.cache
+D:\Projects\.net-path\BankingApp\BankingAPI\BankingAPI.UnitTests\obj\Debug\net8.0\MvcTestingAppManifest.json
+D:\Projects\.net-path\BankingApp\BankingAPI\BankingAPI.UnitTests\obj\Debug\net8.0\BankingAPI.UnitTests.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\.net-path\BankingApp\BankingAPI\BankingAPI.UnitTests\obj\Debug\net8.0\BankingAPI.UnitTests.AssemblyInfoInputs.cache
+D:\Projects\.net-path\BankingApp\BankingAPI\BankingAPI.UnitTests\obj\Debug\net8.0\BankingAPI.UnitTests.AssemblyInfo.cs
+D:\Projects\.net-path\BankingApp\BankingAPI\BankingAPI.UnitTests\obj\Debug\net8.0\BankingAPI.UnitTests.csproj.CoreCompileInputs.cache
+D:\Projects\.net-path\BankingApp\BankingAPI\BankingAPI.UnitTests\obj\Debug\net8.0\BankingAPI.UnitTests.sourcelink.json

@@ -1,0 +1,37 @@
+---
+import AccoutDetails from '@/components/reacto/AccountDetails'
+import { ComboboxPopover } from '@/components/reacto/ComboboxPopover'
+import AccountLayout from '@/layouts/AccountLayout.astro'
+import CustomerLayout from '@/layouts/CustomerLayout.astro'
+import { fetchCustomerAccounts } from '@/services/customer'
+
+const customerId = 'c27b01d6-2cca-4745-b1ba-7a6a4f31082c'
+
+export async function getStaticPaths() {
+  const customerId = 'c27b01d6-2cca-4745-b1ba-7a6a4f31082c'
+
+  const token =
+    'CfDJ8OiihlF8NI9LrHLGjnWYSwTZpwDeeXUlo8YpF1VbrP3VZknwuOZ3jh8EkD5GCzGZ88gGKNoi6MHfmTCtrWDxvCDD2AkBC2iSvG60M5YYYVbDJC9fcuTE6kyrQ5VZjYqtbPqWu6kzc0vfiET09WNbjPSXBJ9LD2z1L5SmbjA555ejKXelmJOwcWS4ZkRc5Yjyz_LiBABZjUho2PZXq7dKgzkcC643ZmZr0RyvV2faCv_sXscykk6rqlhDYpqItLZ8IWtcRlT3Cp2R1UCYxn13DHmT5wmyb_5J40-mxtpySoMI2K_4MEXgOVhTRLA70C7DCdkN0VZLOiQKFPtXX7sDJ6pSYqKu3fkhi1xEHyXw5xItkD98BvxfGcXf3UydgRfHQqCUZ9mYzB1TGfzKWJSSzWEitmkw9j_yqcQNMMVEgYy1wI1QhGpiybQH3lWcc6sEvRQCST984enIiIjtBWivytkPXgyoqYd6bP8GjBzTrHL6nkvw3dMHBhRFy1-ziXObTs0qRFtYu1aKnDn2zn5D3snva8GHtucPJFXbWn4KxfrQ7fUSSud_prwBktI50gGxMwh45eyEPWoiX71wCL3c7W7F03hZjwslUQehuvXYeLnKXbVxvReYuGrjxqL7JQfOmqQ7ZjFNVktQOirugoVb8XeJ5767HdfXUiY1cItTKT9Q9F0fuZDVlYbpTIL0IoZn_A'
+  // const products = await fetch('https://.../products').then((res) => res.json())
+  const accounts = await fetchCustomerAccounts(`${token}`, `${customerId}`)
+  console.log(accounts)
+
+  return accounts.map((account) => ({
+    params: {
+      account: account.accountId,
+    },
+  }))
+}
+
+const { account } = Astro.params
+---
+
+<AccountLayout pageTitle="Account Details">
+  <div>
+    <!-- <ComboboxPopover client:load accounts={accounts} /> -->
+
+    <h5 class="text-lg text-gray-950 underline">Some details</h5>
+    <div>Good account, {account}!</div>
+    <AccoutDetails accountId={`${account}`} customerId={customerId} />
+  </div>
+</AccountLayout>

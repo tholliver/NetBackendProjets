@@ -1,0 +1,43 @@
+@AuthAPI_HostAddress = http://localhost:5093
+
+GET {{AuthAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+
+### POST Request for User Registration
+POST {{AuthAPI_HostAddress}}/api/authentication
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "userName": "johndoe",
+  "password": "StrongPassword123!",
+  "email": "johndoe@example.com",
+  "phoneNumber": "1234567890",
+  "roles": ["Manager", "Admin"]
+}
+
+
+### POST LOGIN  --- Admin | Manager 
+POST {{AuthAPI_HostAddress}}/api/authentication/login
+Content-Type: application/json
+
+{
+  "username": "johndoe",
+  "password": "StrongPassword123!"
+}
+
+### POST LOGIN  --- Admin 
+POST {{AuthAPI_HostAddress}}/api/authentication/login
+Content-Type: application/json
+
+{
+  "username": "janedoe",
+  "password": "StrongPassword123!"
+}
+
+### Get with AUTH
+GET {{AuthAPI_HostAddress}}/api/employees
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiamFuZWRvZSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzMyODMyNTQ2LCJpc3MiOiJDb2RlTWF6ZUFQSSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA5MztodHRwczovL2xvY2FsaG9zdDo3MTM1In0.J_qWmwpFrv-yLB86YQcR9-HtpgU7a38uY9otyZVDG0k
+Accept: application/json

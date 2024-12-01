@@ -1,0 +1,12 @@
+D:\Projects\.net-path\AuthApps\Auth.API\Contracts\bin\Debug\net8.0\Contracts.deps.json
+D:\Projects\.net-path\AuthApps\Auth.API\Contracts\bin\Debug\net8.0\Contracts.dll
+D:\Projects\.net-path\AuthApps\Auth.API\Contracts\bin\Debug\net8.0\Contracts.pdb
+D:\Projects\.net-path\AuthApps\Auth.API\Contracts\obj\Debug\net8.0\Contracts.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\.net-path\AuthApps\Auth.API\Contracts\obj\Debug\net8.0\Contracts.AssemblyInfoInputs.cache
+D:\Projects\.net-path\AuthApps\Auth.API\Contracts\obj\Debug\net8.0\Contracts.AssemblyInfo.cs
+D:\Projects\.net-path\AuthApps\Auth.API\Contracts\obj\Debug\net8.0\Contracts.csproj.CoreCompileInputs.cache
+D:\Projects\.net-path\AuthApps\Auth.API\Contracts\obj\Debug\net8.0\Contracts.sourcelink.json
+D:\Projects\.net-path\AuthApps\Auth.API\Contracts\obj\Debug\net8.0\Contracts.dll
+D:\Projects\.net-path\AuthApps\Auth.API\Contracts\obj\Debug\net8.0\refint\Contracts.dll
+D:\Projects\.net-path\AuthApps\Auth.API\Contracts\obj\Debug\net8.0\Contracts.pdb
+D:\Projects\.net-path\AuthApps\Auth.API\Contracts\obj\Debug\net8.0\ref\Contracts.dll
