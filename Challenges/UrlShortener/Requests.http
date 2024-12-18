@@ -1,0 +1,5 @@
+### POST URL
+POST http://localhost:5295/uri?originalURI=http%3A%2F%2Fcasa%2Flacazzete
+
+###
+GET http://localhost:5295/uri

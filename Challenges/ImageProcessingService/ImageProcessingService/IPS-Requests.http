@@ -1,0 +1,29 @@
+@ImageProcessingService_HostAddress = http://localhost:5037
+        
+POST {{ImageProcessingService_HostAddress}}/api/auth
+Accept: application/json
+
+### Register User
+
+POST {{ImageProcessingService_HostAddress}}/api/auth
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "userName": "johndoe",
+  "password": "StrongPassword123!",
+  "email": "johndoe@example.com",
+  "phoneNumber": "1234567890",
+  "roles": ["Manager", "Admin"]
+}
+
+
+### POST LOGIN  --- Admin | Manager 
+POST {{ImageProcessingService_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "johndoe",
+  "password": "StrongPassword123!"
+}

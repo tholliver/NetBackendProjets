@@ -1,0 +1,80 @@
+# Ignore all user-specific and build output files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.cache
+
+# Ignore build results
+bin/
+obj/
+out/
+*.exe
+*.dll
+*.pdb
+*.nuget
+
+# Ignore Rider/VSCode/Visual Studio specific files
+.idea/
+.vscode/
+.vs/
+*.log
+
+# Ignore NuGet packages
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Ignore .NET Core secrets and key files
+secrets.json
+*.key
+
+# Ignore appsettings files (common in .NET projects)
+**/appsettings.*.json
+!**/appsettings.Development.json # Track specific appsettings if needed (optional)
+
+# Ignore database and cache files
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
+# Ignore environment variables
+.env
+.env.*
+
+# Ignore publish output
+publish/
+
+# Ignore test results
+TestResults/
+*.trx
+*.coverage
+*.csproj.user
+
+# Ignore Resharper or Rider settings
+_ReSharper.Caches/
+*.DotSettings.user
+
+# Ignore any nested solutions and projects build artifacts
+**/bin/
+**/obj/
+**/out/
+
+# Ignore temporary files and locks
+*.pid
+*.lock
+
+# Ignore tooling and package managers
+node_modules/
+wwwroot/lib/
+wwwroot/dist/
+npm-debug.log
+yarn-error.log
+dist/
+
+# Ignore custom configurations
+local.settings.json
+*.config.json
