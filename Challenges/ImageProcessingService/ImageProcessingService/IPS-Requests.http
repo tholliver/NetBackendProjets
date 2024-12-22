@@ -27,3 +27,21 @@ Content-Type: application/json
   "username": "johndoe",
   "password": "StrongPassword123!"
 }
+
+
+### POST images
+POST {{ImageProcessingService_HostAddress}}/api/images
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary12345
+
+------WebKitFormBoundary12345
+Content-Disposition: form-data; name="file"; filename="image.jpg"
+Content-Type: image/jpeg
+
+< C:\Users\DaMagic\Pictures\NissanNitro127.jpg
+------WebKitFormBoundary12345--
+
+### Get image by ID
+@IdImage = 2
+
+GET {{ImageProcessingService_HostAddress}}/api/images/{{IdImage}}
+Accept: application/json

@@ -70,8 +70,6 @@ public static class ServiceExtensions
     public static void ConfigureServiceManager(this IServiceCollection services) =>
         services.AddScoped<IServiceManager, ServiceManager>();
 
-    public static void ConfigureRepositoryManager(this IServiceCollection services)
-    {
+    public static void ConfigureRepositoryManager(this IServiceCollection services) =>
         services.AddScoped<IRepositoryManager, RepositoryManager>();
-    }
 }

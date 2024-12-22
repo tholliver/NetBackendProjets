@@ -23,11 +23,6 @@ internal sealed class ImageService(IRepositoryManager repository) : IImageServic
         return await _repository.Images.GetImageById(id, trackChanges);
     }
 
-    public Task<Image> GetImageById(int id)
-    {
-        throw new NotImplementedException();
-    }
-
     public void SaveImage(Guid userId, Image image)
     {
         throw new NotImplementedException();

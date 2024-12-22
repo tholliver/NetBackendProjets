@@ -3,25 +3,26 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageProcessingService", "ImageProcessingService\ImageProcessingService.csproj", "{59C9B9BD-1F14-410F-A535-3F6FDEDB4802}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageProcessingService", "ImageProcessingService\ImageProcessingService.csproj", "{59C9B9BD-1F14-410F-A535-3F6FDEDB4802}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{7C758978-891C-43A8-BFC6-F7A7CCAACFDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{7C758978-891C-43A8-BFC6-F7A7CCAACFDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{0B972695-768D-43C1-9A94-CC05199CFEAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{0B972695-768D-43C1-9A94-CC05199CFEAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{B25BD7A0-4E59-422D-9027-FF81ACAF6273}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{B25BD7A0-4E59-422D-9027-FF81ACAF6273}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{45F09015-D49B-481D-A353-A9D0E148BFE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{45F09015-D49B-481D-A353-A9D0E148BFE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controllers", "Controllers\Controllers.csproj", "{8A2B2052-A4AE-4F7D-8435-6853F770A6B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Controllers", "Controllers\Controllers.csproj", "{8A2B2052-A4AE-4F7D-8435-6853F770A6B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3428BA05-9E39-4FEF-BC5A-F4AF61D58C64}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageProcessingService.API.IntegrationTests", "tests\ImageProcessingService.API.IntegrationTests\ImageProcessingService.API.IntegrationTests.csproj", "{200D2C86-92FE-450B-B4C9-1602B9A5A70E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{59C9B9BD-1F14-410F-A535-3F6FDEDB4802}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -48,5 +49,15 @@ Global
 		{8A2B2052-A4AE-4F7D-8435-6853F770A6B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A2B2052-A4AE-4F7D-8435-6853F770A6B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A2B2052-A4AE-4F7D-8435-6853F770A6B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{200D2C86-92FE-450B-B4C9-1602B9A5A70E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{200D2C86-92FE-450B-B4C9-1602B9A5A70E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{200D2C86-92FE-450B-B4C9-1602B9A5A70E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{200D2C86-92FE-450B-B4C9-1602B9A5A70E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{200D2C86-92FE-450B-B4C9-1602B9A5A70E} = {3428BA05-9E39-4FEF-BC5A-F4AF61D58C64}
 	EndGlobalSection
 EndGlobal

@@ -51,13 +51,16 @@ public class ImagesController(IServiceManager service) : ControllerBase
             var uploadPath = Path.Combine("uploads", fileName);
 
             // Ensure directory exists
-            // Directory.CreateDirectory("uploads");
+            Directory.CreateDirectory("uploads");
 
-            // // Save file
-            // using (var stream = new FileStream(uploadPath, FileMode.Create))
-            // {
-            //     await file.CopyToAsync(stream);
-            // }
+            // Save file
+            using (var stream = new FileStream(uploadPath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            
+            // Save image and relate to user
+            
 
             return Ok(new
             {
@@ -65,13 +68,11 @@ public class ImagesController(IServiceManager service) : ControllerBase
                 fileName = fileName,
                 filePath = uploadPath
             });
-
-            // return Ok();
         }
         catch (Exception e)
         {
             return StatusCode((int)HttpStatusCode.InternalServerError,
-                               new { message = $"An error occurred while uploading the file {e.GetType}" });
+                               new { message = $"An error occurred while uploading the file {e.Message}" });
         }
     }
 }
