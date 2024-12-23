@@ -5,6 +5,7 @@ namespace Shared.Mapping;
 
 public static class DomainToDtoMapper
 {
+    // User
     public static User ToUser(this UserForRegistrationDto user)
     {
         return new User

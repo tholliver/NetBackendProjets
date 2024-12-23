@@ -1,10 +1,9 @@
-using System;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using Entities.Models;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
+using ImageProcessingService.API.IntegrationTests.ImageTestData;
 using Xunit.Abstractions;
 
 namespace ImageProcessingService.API.IntegrationTests;
@@ -30,68 +29,100 @@ public class ImagesControllerTests(ITestOutputHelper outputHelper)
         match?.Count.Should().Be(1);
     }
 
-    [Fact]
-    public async Task POST_Create_Image()
-    {
-        var app = new ImageProcessingServiceWebAppFactory();
-        var client = app.CreateClient();
-        
-        // User id
-        const string userId = "8bfc8b29-a139-4883-a0ac-ae04095951ce";
-        var fileContent = new MemoryStream(Encoding.UTF8.GetBytes("Hello World!"));
-        var testFileName = "C:\\Users\\DaMagic\\Pictures\\Screenshots\\Screenshot 2024-11-22 205058.png";
-        var formFile = new FormFile(fileContent, 0, fileContent.Length, "file", testFileName)
-        {
-            Headers = new HeaderDictionary(),
-            ContentType = "image/jpeg",
-        };
-        var formData = new MultipartFormDataContent
-        {
-            { new StreamContent(fileContent), "file", testFileName }
-        };
-        
-        // Act
-        var response = await client.PostAsJsonAsync("api/images", formData);
-        
-        //Assert 
-        response.Should().NotBeNull();
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
-        
-        var createdImage = await response.Content.ReadFromJsonAsync<Image>();
-        createdImage.Should().NotBeNull();
-        // createdImage?.Id.Should().BePositive();
-        // createdImage?.Name.Should().Be(newImage.Name);
-        // createdImage?.Path.Should().Be(newImage.Path);
-        // createdImage?.UserId.Should().Be(userId);
-        
-        // return Ok(new
-        // {
-        //     message = "File uploaded successfully",
-        //     fileName = fileName,
-        //     filePath = uploadPath
-        // });
-    }
-
-    [Fact]
-    public async Task GET_Retrieve_ImageById()
+    [Theory]
+    [MemberData(nameof(ImageTestCases.ImageFilesTestData), MemberType = typeof(ImageTestCases))]
+    public async Task POST_Create_Image_With_External_File(string imageFilePath,
+                                                           string userId,
+                                                           HttpStatusCode expectedStatusCode)
     {
         // Arrange
         var app = new ImageProcessingServiceWebAppFactory();
         var client = app.CreateClient();
 
-        // Define id for test
-        const int imageId = 1;
+        // Ensure the file exists before proceeding
+        Assert.True(File.Exists(imageFilePath), $"Test file not found at {imageFilePath}");
+
+        await using var fileContent = new FileStream(imageFilePath, FileMode.Open, FileAccess.Read);
+        var formData = new MultipartFormDataContent
+        {
+            {
+                new StreamContent(fileContent)
+                {
+                    Headers = { ContentType = new MediaTypeHeaderValue($"image/{Path.GetExtension(imageFilePath)}") }
+                },
+                "file", Path.GetFileName(imageFilePath)
+            }
+        };
+
+        // Act
+        var response = await client.PostAsync($"api/images/{userId}", formData);
+        _outputHelper.WriteLine($"{response.StatusCode} - {response.ReasonPhrase}");
+
+        // Assert
+        response.Should().NotBeNull();
+        response.StatusCode.Should().Be(expectedStatusCode);
+        if (expectedStatusCode == HttpStatusCode.Created)
+        {
+            var createdImage = await response.Content.ReadFromJsonAsync<Image>();
+            createdImage.Should().NotBeNull();
+            Assert.NotNull(createdImage?.Name);
+            Assert.NotNull(createdImage.Path);
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ImageTestCases.NotValidImageFilesTestData), MemberType = typeof(ImageTestCases))]
+    public async Task POST_Invalid_ImageFomat_Should_Not_Be_Uploaded(string testFilePath, string userId)
+    {
+        // Arrange 
+        var app = new ImageProcessingServiceWebAppFactory();
+        var client = app.CreateClient();
+
+        // Act
+        // Ensure the file exists before proceeding
+        Assert.True(File.Exists(testFilePath), $"Test file not found at {testFilePath}");
+
+        await using var fileContent = new FileStream(testFilePath, FileMode.Open, FileAccess.Read);
+        var formData = new MultipartFormDataContent
+        {
+            {
+                new StreamContent(fileContent)
+                {
+                    Headers = { ContentType = new MediaTypeHeaderValue("image/png") }
+                },
+                "file", Path.GetFileName(testFilePath)
+            }
+        };
+
+        var response = await client.PostAsync($"api/images/{userId}", formData);
+        _outputHelper.WriteLine($"{response.StatusCode} - {response.ReasonPhrase}");
+
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.ReasonPhrase.Should().Be("Bad Request");
+    }
+
+    [Theory]
+    [MemberData(nameof(ImageTestCases.ImageIdsTestData), MemberType = typeof(ImageTestCases))]
+    public async Task GET_Retrieve_ImageById(int imageId, HttpStatusCode expectedStatusCode)
+    {
+        // Arrange
+        var app = new ImageProcessingServiceWebAppFactory();
+        var client = app.CreateClient();
 
         // Act
         var response = await client.GetAsync($"api/images/{imageId}");
 
         // Assert
-        response.EnsureSuccessStatusCode();
-        var imageMatch = await response.Content.ReadFromJsonAsync<Image>();
-        imageMatch.Should().NotBeNull();
-        imageMatch?.Id.Should().Be(imageId);
+        response.StatusCode.Should().Be(expectedStatusCode);
+        if (expectedStatusCode == HttpStatusCode.OK)
+        {
+            var imageMatch = await response.Content.ReadFromJsonAsync<Image>();
+            imageMatch.Should().NotBeNull();
+            imageMatch?.Id.Should().Be(imageId);
+        }
     }
 
-    // AddImageRequest_AddsImage
 
+    // AddImageRequest_AddsImage
 }

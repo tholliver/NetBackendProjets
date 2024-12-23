@@ -1,6 +1,6 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
@@ -11,8 +11,8 @@ namespace Controllers;
 [ApiController]
 public class ImagesController(IServiceManager service) : ControllerBase
 {
-    private readonly long _maxFileSize = 5 * 1024 * 1024; // 5MB
-    private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+    private const long _maxFileSize = 5 * 1024 * 1024; // 5MB
+    private readonly string[] _allowedExtensions = [ ".jpg", ".jpeg", ".png", ".gif" ];
 
     private readonly IServiceManager _service = service;
 
@@ -32,8 +32,8 @@ public class ImagesController(IServiceManager service) : ControllerBase
         return image != null ? Ok(image) : NotFound();
     }
 
-    [HttpPost]
-    public async Task<IActionResult> UploadImage(IFormFile file)
+    [HttpPost("{userId}")]
+    public async Task<IActionResult> UploadImage([FromRoute]string userId, IFormFile file)
     {
         try
         {
@@ -41,7 +41,7 @@ public class ImagesController(IServiceManager service) : ControllerBase
                 return BadRequest(new { message = "No file was uploaded" });
 
             if (file.Length > _maxFileSize)
-                return BadRequest(new { message = "No file was uploaded" });
+                return BadRequest(new { message = "File is too big" });
 
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (!_allowedExtensions.Contains(extension))
@@ -54,20 +54,29 @@ public class ImagesController(IServiceManager service) : ControllerBase
             Directory.CreateDirectory("uploads");
 
             // Save file
-            using (var stream = new FileStream(uploadPath, FileMode.Create))
+            await using (var stream = new FileStream(uploadPath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
             
-            // Save image and relate to user
-            
-
-            return Ok(new
+            // Save reference for user
+            var imageEntity = new Image
             {
-                message = "File uploaded successfully",
-                fileName = fileName,
-                filePath = uploadPath
-            });
+                Name = fileName,
+                Path = uploadPath,
+                UserId = userId
+            };
+            
+            // Save the new image to database 
+            var imageSaved = await _service.ImageService.SaveImage(imageEntity);
+            Console.WriteLine($"{imageSaved.Name} - {imageSaved.Path}");
+            
+            // Save image and relate to user
+            return CreatedAtAction(
+                nameof(GetImageById),
+                new { id = imageSaved.Id }, 
+                imageSaved
+            );
         }
         catch (Exception e)
         {

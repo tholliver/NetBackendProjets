@@ -1,6 +1,7 @@
 using System;
 using Entities.Models;
 using Service.Contracts;
+using Shared.Mapping;
 
 namespace Service;
 
@@ -23,8 +24,8 @@ internal sealed class ImageService(IRepositoryManager repository) : IImageServic
         return await _repository.Images.GetImageById(id, trackChanges);
     }
 
-    public void SaveImage(Guid userId, Image image)
+    public async Task<Image> SaveImage(Image image)
     {
-        throw new NotImplementedException();
+        return await _repository.Images.SaveImage(image);
     }
 }
