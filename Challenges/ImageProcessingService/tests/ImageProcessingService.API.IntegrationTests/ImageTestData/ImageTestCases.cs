@@ -37,7 +37,7 @@ public class ImageTestCases
         new object[] {
             @"C:\Users\DaMagic\Documents\PassportCopy.docx",
             "8bfc8b29-a139-4883-a0ac-ae04095951ce",
-            HttpStatusCode.NotFound
+            HttpStatusCode.BadRequest
         },
     };
 

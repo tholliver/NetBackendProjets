@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Service.Contracts;
@@ -9,10 +10,14 @@ namespace Repository;
 public class ImageRepository(RepositoryContext repository) : 
         RepositoryBase<Image>(repository), IImageRepository
 {
-
     public async Task<IEnumerable<Image>> GetAllImages(bool trackChanges)
     {
         return await FindAll(trackChanges).OrderBy(c => c.Name).ToListAsync();
+    }
+
+    public async Task<IEnumerable<Image>> GetAllImagesByUserId(string userId, bool trackChanges)
+    {
+        return await FindAll(trackChanges).OrderBy(c => c.Name).Where(c => c.UserId == userId).ToListAsync();
     }
 
     public async Task<Image?> GetImageById(int id, bool trackChanges)

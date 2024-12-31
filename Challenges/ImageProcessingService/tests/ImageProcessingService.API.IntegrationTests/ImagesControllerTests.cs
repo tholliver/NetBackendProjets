@@ -4,63 +4,67 @@ using System.Net.Http.Json;
 using Entities.Models;
 using FluentAssertions;
 using ImageProcessingService.API.IntegrationTests.ImageTestData;
+using ImageProcessingService.API.IntegrationTests.TestUtils;
 using Xunit.Abstractions;
 
 namespace ImageProcessingService.API.IntegrationTests;
 
-public class ImagesControllerTests(ITestOutputHelper outputHelper)
+public class ImagesControllerTests(ITestOutputHelper outputHelper, IPSWebAppFactory<Program> factory)
+: IClassFixture<IPSWebAppFactory<Program>>
 {
+    private readonly IPSWebAppFactory<Program> _factory = factory;
+    private readonly HttpClient _client = factory.CreateClient();
     private readonly ITestOutputHelper _outputHelper = outputHelper;
 
     [Fact]
     public async Task GET_Retrieves_All_Images()
     {
         // Arrange
-        var app = new ImageProcessingServiceWebAppFactory();
-        var client = app.CreateClient();
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("TestScheme");
+        // Set data
 
         // Act
-        var response = await client.GetAsync("api/images");
+        var response = await _client.GetAsync("api/images");
+        _outputHelper.WriteLine($"Response: {await response.Content.ReadAsStringAsync()}");
 
         // Assert
-        response.EnsureSuccessStatusCode();
-        var match = await response.Content.ReadFromJsonAsync<List<Image>>();
-        match?[0].Id.Should().BePositive();
-        match?.Count.Should().Be(1);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var images = await response.Content.ReadFromJsonAsync<List<Image>>();
+
+        images.Should().NotBeNull();
+        images.Should().HaveCountGreaterThan(0);
+        images.Should().AllSatisfy(img =>
+        {
+            img.Id.Should().BePositive();
+            img.Path.Should().NotBeNullOrEmpty();
+            img.Name.Should().NotBeNullOrEmpty();
+            img.UserId.Should().NotBeNullOrEmpty();
+        });
     }
 
     [Theory]
     [MemberData(nameof(ImageTestCases.ImageFilesTestData), MemberType = typeof(ImageTestCases))]
-    public async Task POST_Create_Image_With_External_File(string imageFilePath,
+    public async Task POST_Create_Image_With_External_File(string testFilePath,
                                                            string userId,
                                                            HttpStatusCode expectedStatusCode)
     {
         // Arrange
-        var app = new ImageProcessingServiceWebAppFactory();
-        var client = app.CreateClient();
+
 
         // Ensure the file exists before proceeding
-        Assert.True(File.Exists(imageFilePath), $"Test file not found at {imageFilePath}");
+        Assert.True(File.Exists(testFilePath), $"Test file not found at {testFilePath}");
 
-        await using var fileContent = new FileStream(imageFilePath, FileMode.Open, FileAccess.Read);
-        var formData = new MultipartFormDataContent
-        {
-            {
-                new StreamContent(fileContent)
-                {
-                    Headers = { ContentType = new MediaTypeHeaderValue($"image/{Path.GetExtension(imageFilePath)}") }
-                },
-                "file", Path.GetFileName(imageFilePath)
-            }
-        };
+        await using var fileContent = new FileStream(testFilePath, FileMode.Open, FileAccess.Read);
+        var formData = ImageUtils.BuildMultipartFormDataForImage(testFilePath, fileContent);
 
         // Act
-        var response = await client.PostAsync($"api/images/{userId}", formData);
+        var response = await _client.PostAsync($"api/images/user/{userId}", formData);
         _outputHelper.WriteLine($"{response.StatusCode} - {response.ReasonPhrase}");
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(expectedStatusCode);
+
         if (expectedStatusCode == HttpStatusCode.Created)
         {
             var createdImage = await response.Content.ReadFromJsonAsync<Image>();
@@ -72,46 +76,36 @@ public class ImagesControllerTests(ITestOutputHelper outputHelper)
 
     [Theory]
     [MemberData(nameof(ImageTestCases.NotValidImageFilesTestData), MemberType = typeof(ImageTestCases))]
-    public async Task POST_Invalid_ImageFomat_Should_Not_Be_Uploaded(string testFilePath, string userId)
+    public async Task POST_Invalid_ImageFomat_Should_Not_Be_Uploaded(string testFilePath,
+                                                                     string userId,
+                                                                     HttpStatusCode expectedStatusCode)
     {
         // Arrange 
-        var app = new ImageProcessingServiceWebAppFactory();
-        var client = app.CreateClient();
 
         // Act
         // Ensure the file exists before proceeding
         Assert.True(File.Exists(testFilePath), $"Test file not found at {testFilePath}");
 
         await using var fileContent = new FileStream(testFilePath, FileMode.Open, FileAccess.Read);
-        var formData = new MultipartFormDataContent
-        {
-            {
-                new StreamContent(fileContent)
-                {
-                    Headers = { ContentType = new MediaTypeHeaderValue("image/png") }
-                },
-                "file", Path.GetFileName(testFilePath)
-            }
-        };
+        var formData = ImageUtils.BuildMultipartFormDataForImage(testFilePath, fileContent);
 
-        var response = await client.PostAsync($"api/images/{userId}", formData);
+        var response = await _client.PostAsync($"api/images/user/{userId}", formData);
         _outputHelper.WriteLine($"{response.StatusCode} - {response.ReasonPhrase}");
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(expectedStatusCode);
         response.ReasonPhrase.Should().Be("Bad Request");
     }
 
     [Theory]
     [MemberData(nameof(ImageTestCases.ImageIdsTestData), MemberType = typeof(ImageTestCases))]
-    public async Task GET_Retrieve_ImageById(int imageId, HttpStatusCode expectedStatusCode)
+    public async Task GET_Retrieve_ImageById(int imageId,
+                                             HttpStatusCode expectedStatusCode)
     {
         // Arrange
-        var app = new ImageProcessingServiceWebAppFactory();
-        var client = app.CreateClient();
 
         // Act
-        var response = await client.GetAsync($"api/images/{imageId}");
+        var response = await _client.GetAsync($"api/images/user/{imageId}");
 
         // Assert
         response.StatusCode.Should().Be(expectedStatusCode);
@@ -122,7 +116,6 @@ public class ImagesControllerTests(ITestOutputHelper outputHelper)
             imageMatch?.Id.Should().Be(imageId);
         }
     }
-
 
     // AddImageRequest_AddsImage
 }

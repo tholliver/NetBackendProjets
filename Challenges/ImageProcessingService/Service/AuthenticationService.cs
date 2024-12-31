@@ -9,14 +9,18 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using Shared.Mapping;
 using Entities.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using Entities.ConfigurationModels;
 
 namespace Service;
 
 internal sealed class AuthenticationService(
     UserManager<User> userManager,
+    RoleManager<IdentityRole> roleManager,
     IConfiguration configuration) : IAuthenticationService
 {
     private readonly UserManager<User> _userManager = userManager;
+    private readonly RoleManager<IdentityRole> _roleManager = roleManager;
     private readonly IConfiguration _configuration = configuration;
     private User _user;
 
@@ -39,20 +43,33 @@ internal sealed class AuthenticationService(
 
     public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration)
     {
+        var existingRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+        var invalidRoles = userForRegistration.Roles
+                            .Where(r => !existingRoles.Contains(r, StringComparer.OrdinalIgnoreCase))
+                            .ToList();
+
+        if (invalidRoles?.Any() == true)
+        {
+            return IdentityResult.Failed(new IdentityError
+            {
+                Code = "InvalidRoles",
+                Description = $"Invalid roles: {string.Join(", ", invalidRoles)}"
+            });
+        }
+
         var user = userForRegistration.ToUser();
         var result = await _userManager.CreateAsync(user, userForRegistration.Password);
 
-        if (!result.Succeeded)
+        if (!result.Succeeded && userForRegistration.Roles?.Any() == true)
         {
-            return result;
-        }
-
-        if (result.Succeeded)
-        {
-            var roleResult = await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
-            if (!roleResult.Succeeded)
+            if (result.Succeeded)
             {
-                return IdentityResult.Failed(roleResult.Errors.ToArray());
+                var roleResult = await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
+                if (!roleResult.Succeeded)
+                {
+                    await _userManager.DeleteAsync(user);
+                    return IdentityResult.Failed(roleResult.Errors.ToArray());
+                }
             }
         }
 
@@ -88,7 +105,7 @@ internal sealed class AuthenticationService(
 
     private SigningCredentials GetSigningCredentials()
     {
-        var secretKey = _configuration["Secret"];
+        var secretKey = _configuration.GetSection("JwtSettings").GetSection("secret").Value;
 
         if (string.IsNullOrEmpty(secretKey))
             throw new InvalidOperationException("JWT Secret key is missing in configuration.");
@@ -128,7 +145,7 @@ internal sealed class AuthenticationService(
     }
 
     private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials,
-     List<Claim> claims)
+                                                  List<Claim> claims)
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
         var tokenOptions = new JwtSecurityToken(

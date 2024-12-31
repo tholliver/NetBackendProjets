@@ -19,6 +19,11 @@ internal sealed class ImageService(IRepositoryManager repository) : IImageServic
         return await _repository.Images.GetAllImages(trackChanges: false);
     }
 
+    public async Task<IEnumerable<Image>> GetAllImagesByUserId(string userId, bool trackChanges)
+    {
+        return await _repository.Images.GetAllImagesByUserId(userId, trackChanges);
+    }
+
     public async Task<Image> GetImageById(int id, bool trackChanges)
     {
         return await _repository.Images.GetImageById(id, trackChanges);

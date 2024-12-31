@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
@@ -12,11 +13,12 @@ namespace Controllers;
 public class ImagesController(IServiceManager service) : ControllerBase
 {
     private const long _maxFileSize = 5 * 1024 * 1024; // 5MB
-    private readonly string[] _allowedExtensions = [ ".jpg", ".jpeg", ".png", ".gif" ];
+    private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
 
     private readonly IServiceManager _service = service;
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAllImages()
     {
         var images = await _service.ImageService
@@ -25,6 +27,7 @@ public class ImagesController(IServiceManager service) : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> GetImageById([FromRoute, Required] int id)
     {
         var image = await _service.ImageService
@@ -32,8 +35,15 @@ public class ImagesController(IServiceManager service) : ControllerBase
         return image != null ? Ok(image) : NotFound();
     }
 
-    [HttpPost("{userId}")]
-    public async Task<IActionResult> UploadImage([FromRoute]string userId, IFormFile file)
+    [HttpGet("user/{userId:guid}")]
+    public async Task<IActionResult> GetAllImagesByUserId([FromRoute, Required] string userId)
+    {
+        var userImages = await _service.ImageService.GetAllImagesByUserId(userId, false);
+        return Ok(userImages);
+    }
+
+    [HttpPost("user/{userId:guid}")]
+    public async Task<IActionResult> UploadImage([FromRoute] string userId, IFormFile file)
     {
         try
         {
@@ -58,7 +68,7 @@ public class ImagesController(IServiceManager service) : ControllerBase
             {
                 await file.CopyToAsync(stream);
             }
-            
+
             // Save reference for user
             var imageEntity = new Image
             {
@@ -66,15 +76,15 @@ public class ImagesController(IServiceManager service) : ControllerBase
                 Path = uploadPath,
                 UserId = userId
             };
-            
+
             // Save the new image to database 
             var imageSaved = await _service.ImageService.SaveImage(imageEntity);
             Console.WriteLine($"{imageSaved.Name} - {imageSaved.Path}");
-            
+
             // Save image and relate to user
             return CreatedAtAction(
                 nameof(GetImageById),
-                new { id = imageSaved.Id }, 
+                new { id = imageSaved.Id },
                 imageSaved
             );
         }

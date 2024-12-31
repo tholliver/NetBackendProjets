@@ -15,7 +15,7 @@ Content-Type: application/json
   "password": "StrongPassword123!",
   "email": "johndoe@example.com",
   "phoneNumber": "1234567890",
-  "roles": ["Manager", "Admin"]
+  "roles": ["Nor", "Admin"]
 }
 
 
@@ -45,3 +45,8 @@ Content-Type: image/jpeg
 
 GET {{ImageProcessingService_HostAddress}}/api/images/{{IdImage}}
 Accept: application/json
+
+
+### Get all images
+GET {{ImageProcessingService_HostAddress}}/api/images
+Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiam9obmRvZSIsImV4cCI6MTczNTQxNzgxMn0.KEDuoxVeu8TDjzpvXd9SkjLu-3F3R1pOp7x1Yzk82Hs
