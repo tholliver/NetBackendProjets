@@ -10,7 +10,8 @@ using Repository;
 
 namespace ImageProcessingService.API.IntegrationTests;
 
-internal class ImageProcessingServiceWebAppFactory : WebApplicationFactory<Program>
+internal class ImageProcessingServiceWebAppFactory :
+    WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

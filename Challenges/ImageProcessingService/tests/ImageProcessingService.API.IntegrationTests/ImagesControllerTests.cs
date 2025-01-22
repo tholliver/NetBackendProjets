@@ -20,8 +20,9 @@ public class ImagesControllerTests(ITestOutputHelper outputHelper, IPSWebAppFact
     public async Task GET_Retrieves_All_Images()
     {
         // Arrange
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("TestScheme");
         // Set data
+        var authenticatedUser = await AuthUserTests.AuthenticateUser(_client, "johndoe", "StrongPassword123!");
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticatedUser.AccessToken);
 
         // Act
         var response = await _client.GetAsync("api/images");
@@ -49,7 +50,6 @@ public class ImagesControllerTests(ITestOutputHelper outputHelper, IPSWebAppFact
                                                            HttpStatusCode expectedStatusCode)
     {
         // Arrange
-
 
         // Ensure the file exists before proceeding
         Assert.True(File.Exists(testFilePath), $"Test file not found at {testFilePath}");

@@ -1,7 +1,9 @@
 using System;
+using Entities.ConfigurationModels;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Service.Contracts;
 
 namespace Service;
@@ -9,7 +11,7 @@ namespace Service;
 public class ServiceManager(IRepositoryManager repositoryManager,
                             UserManager<User> userManager,
                             RoleManager<IdentityRole> roleManager,
-                            IConfiguration configuration) : IServiceManager
+                            IOptions<JwtConfiguration> configuration) : IServiceManager
 {
     private readonly Lazy<IImageService> _imageService = new Lazy<IImageService>(
         () => new ImageService(repositoryManager)

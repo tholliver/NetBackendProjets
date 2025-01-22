@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Shared.DataTransferObjects;
 
-public class UserForAuthenticationDto
+public record class UserForAuthenticationDto
 {
     [Required(ErrorMessage = "User name is required.")]
     public string? UserName { get; set; }

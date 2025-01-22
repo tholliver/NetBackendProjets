@@ -11,18 +11,29 @@ using Shared.Mapping;
 using Entities.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Entities.ConfigurationModels;
+using Microsoft.Extensions.Options;
 
 namespace Service;
 
-internal sealed class AuthenticationService(
-    UserManager<User> userManager,
-    RoleManager<IdentityRole> roleManager,
-    IConfiguration configuration) : IAuthenticationService
+internal sealed class AuthenticationService : IAuthenticationService
 {
-    private readonly UserManager<User> _userManager = userManager;
-    private readonly RoleManager<IdentityRole> _roleManager = roleManager;
-    private readonly IConfiguration _configuration = configuration;
-    private User _user;
+    private readonly UserManager<User> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IOptions<JwtConfiguration> _configuration;
+    private readonly JwtConfiguration _jwtConfiguration;
+    private User? _user;
+
+    public AuthenticationService(
+      UserManager<User> userManager,
+      RoleManager<IdentityRole> roleManager,
+      IOptions<JwtConfiguration> configuration)
+    {
+        _userManager = userManager;
+        _roleManager = roleManager;
+        _configuration = configuration;
+        _jwtConfiguration = _configuration.Value;
+    }
+
 
     public async Task<TokenDto> CreateToken(bool populateExp)
     {
@@ -93,6 +104,7 @@ internal sealed class AuthenticationService(
     public async Task<TokenDto> RefreshToken(TokenDto tokenDto)
     {
         var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
+
         var user = await _userManager.FindByNameAsync(principal.Identity.Name);
         if (user == null || user.RefreshToken != tokenDto.RefreshToken ||
                              user.RefreshTokenExpiryTime <= DateTime.Now)
@@ -105,7 +117,7 @@ internal sealed class AuthenticationService(
 
     private SigningCredentials GetSigningCredentials()
     {
-        var secretKey = _configuration.GetSection("JwtSettings").GetSection("secret").Value;
+        var secretKey = _jwtConfiguration.Secret;
 
         if (string.IsNullOrEmpty(secretKey))
             throw new InvalidOperationException("JWT Secret key is missing in configuration.");
@@ -147,30 +159,26 @@ internal sealed class AuthenticationService(
     private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials,
                                                   List<Claim> claims)
     {
-        var jwtSettings = _configuration.GetSection("JwtSettings");
-        var tokenOptions = new JwtSecurityToken(
-            issuer: jwtSettings["validIssuer"],
-            audience: jwtSettings["validAudience"],
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expires"])),
-            signingCredentials: signingCredentials
-            );
+        var tokenOptions = new JwtSecurityToken(issuer: _jwtConfiguration.ValidIssuer,
+                                                audience: _jwtConfiguration.ValidAudience,
+                                                claims: claims,
+                                                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtConfiguration.Expires)),
+                                                signingCredentials: signingCredentials);
         return tokenOptions;
     }
 
     private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {
-        var jwtSettings = _configuration.GetSection("JwtSettings");
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = true,
             ValidateIssuer = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                                    Convert.FromBase64String(_configuration["Secret"])),
+                                    Convert.FromBase64String(_jwtConfiguration.Secret)),
             ValidateLifetime = true,
-            ValidIssuer = jwtSettings["validIssuer"],
-            ValidAudience = jwtSettings["validAudience"]
+            ValidIssuer = _jwtConfiguration.ValidIssuer,
+            ValidAudience = _jwtConfiguration.ValidAudience
         };
         var tokenHandler = new JwtSecurityTokenHandler();
         SecurityToken securityToken;
