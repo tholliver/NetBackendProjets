@@ -31,7 +31,6 @@ IClassFixture<IPSWebAppFactory<Program>>
         var jsonContent = JsonSerializer.Serialize(usertDto);
         var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-
         //Act
         var response = await _client.PostAsync("api/auth/register", httpContent);
         var responseContent = await response.Content.ReadAsStringAsync();
@@ -123,5 +122,46 @@ IClassFixture<IPSWebAppFactory<Program>>
         Assert.Contains(expectedMessage, responseContent);
     }
 
+    [Fact]
+    public async Task POST_DeleteUser_When_UserDeletionFails_ReturnsFailure()
+    {
+        // Arrange
+        var userId = "InvalidId";
+
+        // Act
+        var response = await _client.DeleteAsync($"api/auth/{userId}");
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Contains($"User with Id {userId} not found.", responseContent);
+    }
+
+    [Fact]
+    public async Task POST_DeleteUser_When_UserDeletionSucceeds_ReturnsSuccess()
+    {
+        // Arrange
+        var usertDto = new UserForRegistrationDto
+        {
+            FirstName = "Test",
+            LastName = "Doe",
+            UserName = "testdoe",
+            Password = "Pass123!",
+            Email = "testjohn@example.com",
+            PhoneNumber = "1234567890",
+            Roles = new[] { "NoRole" }
+        };
+
+        var jsonContent = JsonSerializer.Serialize(usertDto);
+        var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+        //Act
+        var response = await _client.PostAsync("api/auth/register", httpContent);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Contains("InvalidRoles", responseContent);
+    }
 
 }

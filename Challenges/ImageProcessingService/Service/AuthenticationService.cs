@@ -55,7 +55,7 @@ internal sealed class AuthenticationService : IAuthenticationService
     public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration)
     {
         var existingRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
-        var invalidRoles = userForRegistration.Roles
+        var invalidRoles = userForRegistration.Roles?
                             .Where(r => !existingRoles.Contains(r, StringComparer.OrdinalIgnoreCase))
                             .ToList();
 
@@ -71,16 +71,13 @@ internal sealed class AuthenticationService : IAuthenticationService
         var user = userForRegistration.ToUser();
         var result = await _userManager.CreateAsync(user, userForRegistration.Password);
 
-        if (!result.Succeeded && userForRegistration.Roles?.Any() == true)
+        if (result.Succeeded && userForRegistration.Roles?.Any() == true)
         {
-            if (result.Succeeded)
+            var roleResult = await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
+            if (!roleResult.Succeeded)
             {
-                var roleResult = await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
-                if (!roleResult.Succeeded)
-                {
-                    await _userManager.DeleteAsync(user);
-                    return IdentityResult.Failed(roleResult.Errors.ToArray());
-                }
+                await _userManager.DeleteAsync(user);
+                return IdentityResult.Failed(roleResult.Errors.ToArray());
             }
         }
 
@@ -197,6 +194,18 @@ internal sealed class AuthenticationService : IAuthenticationService
         return principal;
     }
 
+    public async Task<IdentityResult> DeleteUserById(string Id)
+    {
+        var user = await _userManager.FindByIdAsync(Id);
+        if (user == null)
+            return IdentityResult.Failed(new IdentityError
+            {
+                Code = "UserNotFound",
+                Description = $"User with Id {Id} not found."
+            });
+
+        return await _userManager.DeleteAsync(user);
+    }
 
     private string GenerateRefreshToken()
     {

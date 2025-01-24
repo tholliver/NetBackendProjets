@@ -23,7 +23,7 @@ public class AuthenticationController(IServiceManager service) : ControllerBase
             return BadRequest(ModelState);
         }
 
-        return StatusCode(201, result);
+        return StatusCode(201);
     }
 
     [HttpPost("login")]
@@ -36,5 +36,21 @@ public class AuthenticationController(IServiceManager service) : ControllerBase
                             .CreateToken(populateExp: true);
 
         return Ok(tokenDto);
+    }
+
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> DeleteUser([FromRoute] string Id)
+    {
+        var result = await _service.AuthenticationService.DeleteUserById(Id);
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.TryAddModelError(error.Code, error.Description);
+            }
+            return BadRequest(ModelState);
+        }
+
+        return Ok(result);
     }
 }

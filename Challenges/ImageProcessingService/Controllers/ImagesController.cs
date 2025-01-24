@@ -1,14 +1,12 @@
 using System.ComponentModel.DataAnnotations;
-using System.Net;
-using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 
 namespace Controllers;
 
-[Route("api/images"), Authorize]
+[Route("api/images")]
+[Authorize(Roles = "Administrator, User")]
 [ApiController]
 public class ImagesController(IServiceManager service) : ControllerBase
 {

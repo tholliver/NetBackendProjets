@@ -3,9 +3,9 @@
 POST {{ImageProcessingService_HostAddress}}/api/auth
 Accept: application/json
 
-### Register User
+### Register Admin User
 
-POST {{ImageProcessingService_HostAddress}}/api/auth
+POST {{ImageProcessingService_HostAddress}}/api/auth/register
 Content-Type: application/json
 
 {
@@ -15,7 +15,21 @@ Content-Type: application/json
   "password": "StrongPassword123!",
   "email": "johndoe@example.com",
   "phoneNumber": "1234567890",
-  "roles": ["Nor", "Admin"]
+  "roles": ["Administrator"]
+}
+
+### Register User 
+POST {{ImageProcessingService_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "userName": "johndoez",
+  "password": "StrongPassword123!",
+  "email": "johndoez@example.com",
+  "phoneNumber": "1234567890",
+  "roles": ["User"]
 }
 
 
@@ -46,7 +60,12 @@ Content-Type: image/jpeg
 GET {{ImageProcessingService_HostAddress}}/api/images/{{IdImage}}
 Accept: application/json
 
+@Token = "Bearer {{}}
 
 ### Get all images
 GET {{ImageProcessingService_HostAddress}}/api/images
-Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiam9obmRvZSIsImV4cCI6MTczNTQxNzgxMn0.KEDuoxVeu8TDjzpvXd9SkjLu-3F3R1pOp7x1Yzk82Hs
+Authorization:  Bearer {{Token}}
+
+### Delete User By Id 
+@IdUser = "InvalidUserId"
+DELETE {{ImageProcessingService_HostAddress}}/api/auth/{{IdUser}}
