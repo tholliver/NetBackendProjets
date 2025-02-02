@@ -20,11 +20,7 @@ public class ImageTestCases
             @"C:\Users\DaMagic\Pictures\Screenshots\Screenshot 2024-11-26 184222.png",
             "8bfc8b29-a139-4883-a0ac-ae04095951ce",
             HttpStatusCode.Created
-        },
-        // new object[] { @"C:\Users\DaMagic\Pictures\NissanDocs121.jpg",
-        //                     "8bfc8b29-a139-4883-a0ac-ae04095951ce",
-        //                     HttpStatusCode.Created
-        // },
+        }
     };
 
     public static IEnumerable<object[]> NotValidImageFilesTestData => new[]

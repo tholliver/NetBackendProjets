@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -39,6 +40,7 @@ public class AuthenticationController(IServiceManager service) : ControllerBase
     }
 
     [HttpDelete("{Id}")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> DeleteUser([FromRoute] string Id)
     {
         var result = await _service.AuthenticationService.DeleteUserById(Id);

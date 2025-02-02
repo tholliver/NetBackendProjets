@@ -3,6 +3,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Repository;
 using Service;
 using Service.Contracts;
@@ -16,9 +17,9 @@ public static class ServiceExtensions
         services.AddCors(opts =>
         {
             opts.AddPolicy("CorsPolicy", builder =>
-                                    builder.AllowAnyOrigin()
-                                    .AllowAnyMethod()
-                                    .AllowAnyHeader());
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
         });
     }
 
@@ -66,6 +67,36 @@ public static class ServiceExtensions
                 IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(secretKey))
             };
         });
+    }
+
+    public static void AddSwaggerGenConfiguration(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(opts =>
+       {
+           opts.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+           {
+               In = ParameterLocation.Header,
+               Description = "Please enter a valid token",
+               Name = "Authorization",
+               Type = SecuritySchemeType.Http,
+               BearerFormat = "JWT",
+               Scheme = "Bearer"
+           });
+           opts.AddSecurityRequirement(new OpenApiSecurityRequirement
+           {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                        }
+                    },
+                    new string[]{}
+                }
+           });
+       });
     }
 
     public static void ConfigureServiceManager(this IServiceCollection services) =>
