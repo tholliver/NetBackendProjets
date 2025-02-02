@@ -37,7 +37,7 @@ public class LinQMaxContext : DbContext
     /// Mapping table names
     var salesSchema = "sales";
     var productsSchema = "production";
-    
+
     modelBuilder.Entity<Brand>().ToTable("brands", productsSchema);
     modelBuilder.Entity<Category>().ToTable("categories", productsSchema);
     modelBuilder.Entity<Product>().ToTable("products", productsSchema);
@@ -49,7 +49,5 @@ public class LinQMaxContext : DbContext
     modelBuilder.Entity<Staff>().ToTable("staffs", salesSchema);
     modelBuilder.Entity<Store>().ToTable("stores", salesSchema);
 
-    modelBuilder.Entity<OrderItem>().HasKey(oi => new { oi.OrderId, oi.ProductId });
-    modelBuilder.Entity<Stock>().HasKey(s => new { s.StoreId, s.ProductId });
   }
 }

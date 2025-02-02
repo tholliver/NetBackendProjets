@@ -13,5 +13,5 @@ public class Brand
     [StringLength(255)]
     public required string Name { get; set; }
 
-    public List<Product>? Products = [];
+    public List<Product>? Products { get; set; }
 }

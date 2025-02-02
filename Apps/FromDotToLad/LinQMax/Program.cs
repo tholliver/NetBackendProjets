@@ -1,27 +1,42 @@
-﻿using LinQMax.Config;
-using LinQMax.Data;
+﻿using System.Diagnostics;
+using LinQMax.Config;
+using LinQMax.Queries;
 using LinQMax.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+
+// var query = context.Customers
+//     .OrderBy(c => c.FirstName)
+//     .Select(c => new { c.FirstName, c.City })
+//     .Take(5)
+//     .ToList();
+
+// Console.WriteLine($"Customers from London: {query}");
+// foreach (var customer in query)
+// {
+//     Console.WriteLine($"{customer.FirstName} from {customer.City}");
+// }
 
 
-var configuration = new ConfigReader();
-var connectionString = configuration.GetConnectionString("DefaultConnection");
-using var dbService = new DatabaseService(connectionString);
-
-var context = dbService.GetContext();
-
-var query = context.Customers
-    .OrderBy(c => c.FirstName)
-    .Select(c => new { c.FirstName, c.City }).Take(5);
-
-Console.WriteLine($"Customers from London: {query.ToList().Count()}");
-foreach (var customer in query)
+public partial class Program
 {
-    Console.WriteLine($"{customer.FirstName} from {customer.City}");
+    public static async Task Main()
+    {
+        var configuration = new ConfigReader();
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var dbService = new DatabaseService(connectionString);
+
+        var brandQueries = new BrandQueries(dbService);
+
+        // Initialize the Stopwatch
+
+        // Measure runtime of GetTotalProductsByBrand
+        var brandsv2 = await brandQueries.GetTotalProductsByBrandV2();
+
+        // Measure runtime of GetTotalProductsByBrandV2
+        var brands = await brandQueries.GetTotalProductsByBrand();
+
+        // foreach (var brand in brands)
+        // {
+        //     Console.WriteLine($"{brand.Name} has {brand.TotalProducts} products");
+        // }
+    }
 }
-
-
-
-
-

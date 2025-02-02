@@ -2,7 +2,7 @@
 using LinQMax.Data;
 
 namespace LinQMax.Contract;
-public interface IDatabaseService : IDisposable
+public interface IDatabaseService
 {
     LinQMaxContext GetContext();
     Task<bool> TestConnection();

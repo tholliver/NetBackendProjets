@@ -1,12 +1,15 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace LinQMax.Models;
 
+[Table("stocks"), PrimaryKey(nameof(StoreId), nameof(ProductId))]
 public class Stock
 {
-    [Column("store_id")]
+    [Key, Column("store_id", Order = 0)]
     public int StoreId { get; set; }
 
-    [Column("product_id")]
+    [Key, Column("product_id", Order = 1)]
     public int ProductId { get; set; }
 }
