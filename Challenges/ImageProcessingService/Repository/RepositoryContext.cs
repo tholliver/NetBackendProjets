@@ -20,6 +20,6 @@ public class RepositoryContext(DbContextOptions options) : IdentityDbContext(opt
         modelBuilder.ApplyConfiguration(new RoleConfig());
         modelBuilder.ApplyConfiguration(new UserConfig());
     }
-    public DbSet<User> Users { get; set; }
+    // public DbSet<User> Users { get; set; }
     public DbSet<Image> Images { get; set; }
 }

@@ -17,15 +17,22 @@ public class UserImagesController(IServiceManager service) : ControllerBase
 
     private readonly IServiceManager _service = service;
 
-    [HttpGet("{userId:guid}")]
-    public async Task<IActionResult> GetAllImagesByUserId([FromRoute, Required] string userId)
+    // [HttpGet("{userId:guid}")]
+    // public async Task<IActionResult> GetAllImagesByUserId([FromRoute, Required] string userId)
+    // {
+    //     var userImages = await _service.ImageService.GetAllImagesByUserId(userId, false);
+    //     return Ok(userImages);
+    // }
+
+    [HttpGet("{userName}")]
+    public async Task<IActionResult> GetAllImagesByUserName([FromRoute, Required] string userName)
     {
-        var userImages = await _service.ImageService.GetAllImagesByUserId(userId, false);
+        var userImages = await _service.ImageService.GetAllImagesByUserName(userName, false);
         return Ok(userImages);
     }
 
-    [HttpPost("{userId:guid}")]
-    public async Task<IActionResult> UploadImage([FromRoute] string userId, IFormFile file)
+    [HttpPost("{userName}")]
+    public async Task<IActionResult> UploadImage([FromRoute] string userName, IFormFile file)
     {
         try
         {
@@ -42,6 +49,13 @@ public class UserImagesController(IServiceManager service) : ControllerBase
             var fileName = $"{Guid.NewGuid()}{extension}";
             var uploadPath = Path.Combine("uploads", fileName);
 
+            var userDetails = await _service.UserService.GetUserByUserName(userName, false);
+
+            if (userDetails is null)
+            {
+                return BadRequest(new { message = "User not found" });
+            }
+
             // Ensure directory exists
             Directory.CreateDirectory("uploads");
 
@@ -55,8 +69,8 @@ public class UserImagesController(IServiceManager service) : ControllerBase
             var imageEntity = new Image
             {
                 Name = fileName,
-                Path = uploadPath,
-                UserId = userId
+                Path = uploadPath.Replace("\\", "/"),
+                UserId = userDetails.Id
             };
 
             // Save the new image to database 

@@ -2,7 +2,7 @@ namespace Service.Contracts;
 
 public interface IRepositoryManager
 {
-    // IUser User { get; }
+    IUserRepository Users { get; }
     IImageRepository Images { get; }
     Task SaveAsync();
 }

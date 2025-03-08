@@ -1,7 +1,6 @@
 using System;
 using Entities.Models;
 using Service.Contracts;
-using Shared.Mapping;
 
 namespace Service;
 
@@ -24,7 +23,12 @@ internal sealed class ImageService(IRepositoryManager repository) : IImageServic
         return await _repository.Images.GetAllImagesByUserId(userId, trackChanges);
     }
 
-    public async Task<Image> GetImageById(int id, bool trackChanges)
+    public async Task<IEnumerable<Image>> GetAllImagesByUserName(string userName, bool trackChanges)
+    {
+        return await _repository.Images.GetAllImagesByUserName(userName, trackChanges);
+    }
+
+    public async Task<Image?> GetImageById(int id, bool trackChanges)
     {
         return await _repository.Images.GetImageById(id, trackChanges);
     }

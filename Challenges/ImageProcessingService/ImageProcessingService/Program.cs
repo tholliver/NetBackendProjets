@@ -1,6 +1,6 @@
 using ImageProcessingService.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.FileProviders;
 using Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +47,15 @@ var app = builder.Build();
     app.UseAuthorization();
 
     app.UseHttpsRedirection();
+
+    // Exposing images folder
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
+        RequestPath = "/uploads"
+    });
+
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
