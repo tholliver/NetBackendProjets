@@ -1,0 +1,72 @@
+.sql-editor {
+  position: relative;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  font-family: Consolas, monospace;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  height: 300px;
+  overflow: hidden;
+}
+
+.sql-editor-header {
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+.sql-editor-textarea {
+  position: absolute;
+  top: 30px;
+  left: 10px;
+  padding: 0;
+  margin: 0;
+  width: calc(100% - 20px);
+  height: calc(100% - 40px);
+  background: transparent;
+  color: transparent;
+  caret-color: white;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  white-space: pre;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.sql-editor-preview {
+  position: absolute;
+  top: 30px;
+  left: 10px;
+  padding: 0;
+  margin: 0;
+  width: calc(100% - 20px);
+  height: calc(100% - 40px);
+  white-space: pre-wrap;
+  pointer-events: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.text-keyword {
+  color: #569cd6;
+}
+
+.text-function {
+  color: #dcdcaa;
+}
+
+.text-comment {
+  color: #6a9955;
+}
+
+.text-normal {
+  color: #d4d4d4;
+}

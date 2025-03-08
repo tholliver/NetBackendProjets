@@ -1,0 +1,35 @@
+﻿@page "/databases"
+@using DbXplorer.Models
+@using DbXplorer.Services
+
+@inject DbService DbService
+@inject NavigationManager NavManager
+
+<h3 class="text-light">Saved Databases</h3>
+
+<div class="d-flex flex-wrap gap-3">
+    @foreach (var db in allDatabases)
+    {
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">@db.Name</h5>
+                <p class="card-text">Type: @db.DbType</p>
+                <button class="btn btn-primary" @onclick="@(() => GoToQueryPage(db.Id))">Go to Query</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<DbConnectionInfo> allDatabases = [];
+
+    protected override void OnInitialized()
+    {
+        allDatabases = DbService.GetAllConnOptions();
+    }
+
+    private void GoToQueryPage(int dbId)
+    {
+        NavManager.NavigateTo($"/query/{dbId}");
+    }
+}

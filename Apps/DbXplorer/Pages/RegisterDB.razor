@@ -1,0 +1,178 @@
+﻿@page "/register"
+@using DbXplorer.Models
+@using DbXplorer.Services
+@inject IJSRuntime JSRuntime
+
+
+@inject DbService DbService
+
+<h3 class="text-light">Database Connection</h3>
+
+<div class="mb-3">
+    <label class="form-label text-light">Select Database:</label>
+    <select class="form-select" value="@SelectedDb" @onchange="SetDefaultValues">
+        <option selected value="">-- Select --</option>
+        @foreach (var db in AvailableDatabases)
+        {
+            <option value="@db">@db</option>
+        }
+    </select>
+</div>
+
+@if (!string.IsNullOrEmpty(SelectedDb))
+{
+    <div class="mb-3">
+        <div class="mb-3">
+            <label class="text-light  form-label">Server:</label>
+            <input class="form-control" @bind="Host" />
+        </div>
+        <div class="d-flex flex-row justify-content-between">
+
+            <div class="mb-3">
+                <label class="text-light  form-label">Port:</label>
+                <input class="form-control" @bind="Port" type="number" />
+            </div>
+            <div class="mb-3">
+                <label class="text-light  form-label">Username:</label>
+                <input class="form-control" @bind="Username" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="text-light  form-label">Database Name:</label>
+            <input class="form-control" @bind="Database" />
+        </div>
+
+        <div class="mb-3">
+            <label class="text-light form-label">Password:</label>
+            <input class="form-control" @bind="Password" type="password" />
+        </div>
+
+        <button class="btn btn-primary" @onclick="TestConnection">Test Connection</button>
+    </div>
+    <p class="text-light "><strong>Generated Connection String:</strong></p>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" value="@GeneratedConnectionString" placeholder=""
+            aria-label="Recipient's username" aria-describedby="button-addon2">
+
+        <button type="button" @onclick="CopyToClipboard" class="@GetButtonClasses()">
+            @ButtonText
+        </button>
+        @* <button class="btn btn-outline-secondary" @onclick="CopyToClipboard" type="button" id="button-addon2"> 📋
+            Copy</button> *@
+    </div>
+
+    @if (!string.IsNullOrEmpty(TestResult))
+    {
+        <p class="text-light">@TestResult</p>
+    }
+    @if (!string.IsNullOrEmpty(TestResult) && TestResult.Contains("✅"))
+    {
+        <div class="mb-3">
+            <label class="text-light form-label">Connection Name (optional):</label>
+            <input class="form-control" @bind="ConnectionName" placeholder="My Favorite DB" />
+        </div>
+
+        <button class="btn btn-success" @onclick="SaveConnection">
+            💾 Save Connection
+        </button>
+    }
+}
+
+@code {
+    private string SelectedDb = "";
+    private string Host = "";
+    private int Port;
+    private string Database = "";
+    private string Username = "";
+    private string Password = "";
+    private string TestResult = "";
+
+    private readonly Dictionary<string, (string DefaultHost, int DefaultPort, string DefaultUser)> DbDefaults = new()
+{
+{ "PostgreSQL", ("localhost", 5432, "postgres") },
+{ "SQL Server", ("localhost", 1433, "sa") },
+{ "MySQL", ("localhost", 3306, "root") }
+};
+
+    private List<string> AvailableDatabases = new() { "PostgreSQL", "SQL Server", "MySQL" };
+
+    private void SetDefaultValues(ChangeEventArgs e)
+    {
+        SelectedDb = e.Value?.ToString() ?? "";
+
+        if (DbDefaults.TryGetValue(SelectedDb, out var defaults))
+        {
+            Host = defaults.DefaultHost;
+            Port = defaults.DefaultPort;
+            Username = defaults.DefaultUser;
+        }
+    }
+
+    private string GeneratedConnectionString => SelectedDb switch
+    {
+        "PostgreSQL" => $"Host={Host};Port={Port};Database={Database};Username={Username};Password={Password}",
+        "SQL Server" => $"Server={Host},{Port};Database={Database};User Id={Username};Password={Password}",
+        "MySQL" => $"Server={Host};Port={Port};Database={Database};User Id={Username};Password={Password}",
+        _ => ""
+    };
+
+    private void TestConnection()
+    {
+        if (string.IsNullOrEmpty(Database) || string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
+        {
+            TestResult = "❌ Please fill all fields.";
+            return;
+        }
+
+        bool success = DbService.TestConnection(GeneratedConnectionString, SelectedDb);
+
+        TestResult = success ? "✅ Connection successful!" : "❌ Connection failed.";
+    }
+
+    //
+
+    private string ButtonText = "📋 Copy";
+    private bool IsCopied = false;
+
+    private async Task CopyToClipboard()
+    {
+        if (!string.IsNullOrEmpty(GeneratedConnectionString))
+        {
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", GeneratedConnectionString);
+
+            // Set permanent 'Copied' state after the first copy
+            IsCopied = true;
+            ButtonText = "✅ Copied!";
+        }
+    }
+
+    private string GetButtonClasses()
+    {
+        return IsCopied
+        ? "bg-green-600 text-white hover:bg-green-700"
+        : "bg-gray-700 text-white hover:bg-gray-900";
+    }
+
+    // Save db
+    private string ConnectionName = "";
+    private bool CanSaveConnection => TestResult.Contains("✅"); // Only enable save if connection was successful
+
+    private void SaveConnection()
+    {
+        if (string.IsNullOrEmpty(ConnectionName))
+        {
+            ConnectionName = $"{SelectedDb} - {Database}"; // Fallback name if none provided
+        }
+
+        DbService.AddDbConn(new DbConnectionInfo()
+        {
+            ConnectionString = GeneratedConnectionString,
+            Name = ConnectionName,
+            DbType = SelectedDb
+        });
+        @* DbServiceOld.SaveConnection(ConnectionName, GeneratedConnectionString); *@
+        TestResult = "✅ Connection saved successfully!";
+    }
+
+}

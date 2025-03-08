@@ -1,0 +1,21 @@
+/* ComponentName.razor.css */
+
+/* Custom styles for the dropdown toggle button if needed */
+.btn-group .dropdown-menu {
+  min-width: 120px;
+}
+
+/* Optional: Custom styling for the accordion */
+.accordion-button {
+  font-weight: bold;
+  color: #007bff;
+}
+.accordion-button:not(.collapsed) {
+  color: #004085;
+  background-color: #e9ecef;
+}
+
+/* Adjusting spacing between items, if necessary */
+.accordion-body {
+  padding: 1rem;
+}

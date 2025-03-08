@@ -1,0 +1,235 @@
+﻿@page "/query/{id:int}"
+@using DbXplorer.Models
+@using DbXplorer.Services
+@inject DbService DbService
+
+<h3 class="text-light">Query Database: @SelectedDb?.Name</h3>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Main Query + Results Section -->
+        <div class="col-12 col-md-8 order-2 order-md-1">
+            <div class="card mb-3">
+                <div class="">
+                    <SQLTextArea OnQueryChanged="HandleQueryChanged" />
+                </div>
+            </div>
+
+            <button class="btn btn-primary mb-3" @onclick="RunQuery">Run Query</button>
+
+            @if (QueryResults != null)
+            {
+                <h4>Results</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                @foreach (var column in Columns)
+                                {
+                                    <th @onclick="() => SortByColumn(column)">
+                                        @column
+                                        @if (SortColumn == column)
+                                        {
+                                            <span>@(SortAscending ? "🔼" : "🔽")</span>
+                                        }
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in SortedResults)
+                            {
+                                <tr>
+                                    @foreach (var column in Columns)
+                                    {
+                                        <td>@(row.TryGetValue(column, out var value) ? value : null)</td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger">@ErrorMessage</div>
+            }
+        </div>
+
+        <!-- Sidebar with Database Explorer -->
+        <div class="col-12 col-md-4 order-1 order-md-2">
+            <div class="card">
+                <div class="card-header"><strong>Database Explorer</strong></div>
+                <div class="accordion" id="accordionDbObjects">
+
+                    @foreach (var schema in SchemaObjects)
+                    {
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-@schema.Name">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse-@schema.Name" aria-expanded="true">
+                                    Schema: @schema.Name
+                                </button>
+                            </h2>
+                            <div id="collapse-@schema.Name" class="accordion-collapse collapse show">
+                                <div class="accordion-body">
+
+                                    <h6>Tables</h6>
+                                    @if (schema.Tables.Any())
+                                    {
+                                        <ul class="list-group">
+                                            @foreach (var table in schema.Tables)
+                                            {
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>@table</span>
+                                                    <button class="btn btn-sm btn-outline-primary"
+                                                        @onclick="@(() => LoadTableData($"{schema.Name}.{table}", 10))">Preview</button>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <p>No tables found.</p>
+                                    }
+
+                                    <h6 class="mt-3">Views</h6>
+                                    @if (schema.Views.Any())
+                                    {
+                                        <ul class="list-group">
+                                            @foreach (var view in schema.Views)
+                                            {
+                                                <li class="list-group-item">@view</li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <p>No views found.</p>
+                                    }
+
+                                    <h6 class="mt-3">Functions</h6>
+                                    @if (schema.Functions.Any())
+                                    {
+                                        <ul class="list-group">
+                                            @foreach (var function in schema.Functions)
+                                            {
+                                                <li class="list-group-item">@function</li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <p>No functions found.</p>
+                                    }
+
+                                    <h6 class="mt-3">Sequences</h6>
+                                    @if (schema.Sequences.Any())
+                                    {
+                                        <ul class="list-group">
+                                            @foreach (var sequence in schema.Sequences)
+                                            {
+                                                <li class="list-group-item">@sequence</li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <p>No sequences found.</p>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private DbConnectionInfo? SelectedDb;
+
+    private string QueryText = "";
+    private List<Dictionary<string, object>>? QueryResults;
+    private List<string> Columns = new();
+    private List<Dictionary<string, object>> SortedResults = new();
+    private string? SortColumn;
+    private bool SortAscending = true;
+    private string ErrorMessage = "";
+
+    private List<DbSchema> SchemaObjects = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        SelectedDb = DbService.GetAllConnOptions().FirstOrDefault(d => d.Id == Id);
+        if (SelectedDb != null)
+        {
+            SchemaObjects = await DbService.FetchSchemasAndObjectsAsync(SelectedDb.ConnectionString);
+        }
+        else
+        {
+            ErrorMessage = "Database not found.";
+        }
+    }
+
+    private void HandleQueryChanged(string query) => QueryText = query;
+
+    private void RunQuery()
+    {
+        if (SelectedDb == null || string.IsNullOrWhiteSpace(QueryText))
+        {
+            ErrorMessage = "Please enter a query.";
+            return;
+        }
+
+        try
+        {
+            QueryResults = DbService.ExecuteQuery(SelectedDb.ConnectionString, SelectedDb.DbType, QueryText);
+
+            if (QueryResults?.Any() == true)
+            {
+                Columns = QueryResults[0].Keys.ToList();
+                SortedResults = QueryResults.ToList();
+            }
+            else
+            {
+                Columns.Clear();
+                SortedResults.Clear();
+            }
+
+            ErrorMessage = "";
+            SortColumn = null;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"❌ Error: {ex.Message}";
+        }
+    }
+
+    private void SortByColumn(string column)
+    {
+        if (SortColumn == column)
+        {
+            SortAscending = !SortAscending;
+        }
+        else
+        {
+            SortColumn = column;
+            SortAscending = true;
+        }
+
+        SortedResults = SortAscending
+        ? QueryResults?.OrderBy(r => r[column]).ToList()
+        : QueryResults?.OrderByDescending(r => r[column]).ToList();
+    }
+
+    private void LoadTableData(string tableName, int rows)
+    {
+        QueryText = $"SELECT * FROM {tableName} LIMIT {rows}";
+        RunQuery();
+    }
+}

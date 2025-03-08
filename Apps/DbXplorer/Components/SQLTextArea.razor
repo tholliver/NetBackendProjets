@@ -1,0 +1,94 @@
+﻿<div class="sql-editor">
+    <div class="sql-editor-header">
+        <span>SQL Query Editor</span>
+    </div>
+
+    <textarea @bind="QueryText" @oninput="HandleQueryChanged" class="sql-editor-textarea" spellcheck="false"></textarea>
+
+    <div class="sql-editor-preview" @ref="PreviewDivRef">
+        @foreach (var token in HighlightedTokens)
+        {
+            <span class="@token.Class">@token.Text</span>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<string> OnQueryChanged { get; set; }
+
+    private string QueryText = "";
+    private List<HighlightedToken> HighlightedTokens = new();
+    private ElementReference PreviewDivRef;
+
+    class HighlightedToken
+    {
+        public string Text { get; set; } = "";
+        public string Class { get; set; } = "text-normal"; // default class
+    }
+
+    private async void HandleQueryChanged(ChangeEventArgs args)
+    {
+        QueryText = args.Value?.ToString() ?? "";
+        ParseSql(QueryText);
+        await OnQueryChanged.InvokeAsync(QueryText);
+    }
+
+    private void ParseSql(string query)
+    {
+        HighlightedTokens.Clear();
+
+        int index = 0;
+        while (index < query.Length)
+        {
+            char c = query[index];
+
+            if (char.IsWhiteSpace(c))
+            {
+                string space = "";
+                while (index < query.Length && char.IsWhiteSpace(query[index]))
+                {
+                    space += query[index];
+                    index++;
+                }
+                HighlightedTokens.Add(new HighlightedToken { Text = space, Class = "text-normal" });
+            }
+            else
+            {
+                string word = "";
+                while (index < query.Length && !char.IsWhiteSpace(query[index]))
+                {
+                    word += query[index];
+                    index++;
+                }
+
+                HighlightedTokens.Add(new HighlightedToken
+                {
+                    Text = word,
+                    Class = GetTokenClass(word)
+                });
+            }
+        }
+
+        InvokeAsync(StateHasChanged);
+    }
+
+    private string GetTokenClass(string word)
+    {
+        if (IsKeyword(word)) return "text-keyword";
+        if (IsFunction(word)) return "text-function";
+        if (word.StartsWith("--")) return "text-comment";
+        return "text-normal";
+    }
+
+    private bool IsKeyword(string word) => new[]
+    {
+"SELECT", "FROM", "WHERE", "INSERT", "UPDATE", "DELETE", "INNER", "JOIN", "OUTER", "LEFT", "RIGHT",
+"CREATE", "TABLE", "DROP", "ALTER", "ADD", "COLUMN", "ORDER", "GROUP", "BY", "AS", "AND", "OR", "ON"
+}.Contains(word.ToUpper());
+
+    private bool IsFunction(string word) => new[]
+    {
+"COUNT", "SUM", "AVG", "MIN", "MAX"
+}.Contains(word.ToUpper());
+}
